@@ -22,8 +22,8 @@ body {
   display: grid;
   grid-template-columns: 1fr 350px;
 }
-.signUp .login-form {
-  grid-template-rows: 350px 1fr;
+.signUp .login-form > div {
+  margin-top: 15px;
 }
 .login-form {
   grid-column: 2/3;
@@ -33,6 +33,7 @@ body {
   grid-template-rows: 1fr 1fr 1fr;
   background-color: gray;
   padding: 15px;
+  box-shadow: 0px 0px 5px 3px gray;
 }
 
 .login-form > div {

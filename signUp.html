@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <link href="login.css" rel="stylesheet">
   <title>Login | Taco</title>
+  <script src="functions.js"></script>
 </head>
 <body class="signUp">
   <div class="login-form">
@@ -15,17 +16,17 @@
       </div>
       <div>
         <span>E-mail</span>
-        <input type="text" id="Username">
+        <input type="email" id="email">
       </div>
       <div>
         <span>Password</span>
-        <input type="text" id="password">
+        <input type="password" id="password">
       </div>
       <div>
         <span>Confirm Password</span>
-        <input type="text" id="confirm-password">
+        <input type="password" id="confirm-password">
       </div>
-      <button>Sign Up</button>
+      <button onclick="signUp()">Sign Up</button>
     </div>
   </div>
 </body>
