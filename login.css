@@ -6,7 +6,9 @@
 * {
   font-family: 'Oxanium', cursive;
 }
-
+*:not(a) {
+  color: white;
+}
 html,
 body {
   width: 100%;
