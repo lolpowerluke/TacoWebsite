@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium&display=swap');
+:root {
+  --main-background: rgb(26, 26, 26);
+}
+
+* {
+  font-family: 'Oxanium', cursive;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background-color: var(--main-background);
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+}
+
+.login-form {
+  grid-column: 2/3;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  background-color: gray;
+  padding: 15px;
+}
+
+.login-form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 5px;
+  background-color: var(--main-background);
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 3px var(--main-background);
+}
+.login-form > div > h2 {
+  margin: 0;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+.login-form > div > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.login-form > div > div > span {
+  margin-left: 5px;
+}
+.login-form > img {
+  width: 100%;
+}
+input {
+  all: unset;
+  border-radius: 8px;
+  border: 1px solid rgb(88, 88, 88);
+  box-shadow: 0px 3px 5px 0 rgb(117, 117, 117);
+  background-color: rgba(0, 0, 0, 0.712);
+  padding: 5px 10px;
+  color: rgb(214, 214, 214);
+}
