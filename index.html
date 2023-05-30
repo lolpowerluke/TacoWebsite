@@ -6,9 +6,22 @@
   <link href="style.css" rel="stylesheet">
   <script src="functions.js"></script>
 </head>
-<body onload="showCalendarMonth()">
+<body onload="showCalendarDay()">
   <header>
-    <div></div>
+    <div>
+      <button onclick="showCalendarMonth()">
+        <img src="images/month.png" width="30" height="30">
+        <span>Month</span>
+      </button>
+      <button onclick="showCalendarWeek()">
+        <img src="images/week.png" width="30" height="30">
+        <span>Week</span>
+      </button>
+      <button onclick="showCalendarDay()">
+        <img src="images/day.png" width="30" height="30">
+        <span>Day</span>
+      </button>
+    </div>
   </header>
   <main>
     <div id="calendar">
