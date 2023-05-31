@@ -101,6 +101,7 @@ function showCalendarMonth() {
         dateSpanElement.className = "dateElement";
         let dateOnScreen = new Date(firstShownDate.getFullYear(), firstShownDate.getMonth(), firstShownDate.getDate() + datesShown);
         dateSpanElement.innerHTML = dateOnScreen.getDate();
+        dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ')');
         dayElement.appendChild(dateSpanElement);
         datesShown++;
         console.log(datesShown - 1);
