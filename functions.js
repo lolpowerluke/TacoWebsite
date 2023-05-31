@@ -50,9 +50,16 @@ function correctDay(correctionType, amount) {
 }
 function updateDate() {
   shownDate = new Date(shownDate.getFullYear(), shownDate.getMonth() + monthCorrection, shownDate.getDate() + dayCorrection);
-  console.log(shownDate);
+}
+function todayMonth() {
+  shownDate = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
+  showCalendarMonth();
 }
 function showCalendarMonth() {
+  let firstDayofCurrentlyShownMonth = new Date(shownDate.getFullYear(), shownDate.getMonth(), 1);
+  let extraDaysBeforeFirstOfMonth = firstDayofCurrentlyShownMonth.getDay() - 1;
+  let firstShownDate = new Date(shownDate.getFullYear(), shownDate.getMonth(), 1 - extraDaysBeforeFirstOfMonth);
+  let datesShown = 0;
   let calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
   let viewElement = document.createElement('div');
@@ -72,6 +79,7 @@ function showCalendarMonth() {
   let showTodayButton = document.createElement('button');
   showTodayButton.className = "btnToday";
   showTodayButton.innerHTML = "Today";
+  showTodayButton.setAttribute("onclick", 'todayMonth()');
   monthTopElement.appendChild(showTodayButton);
   let nextButton = document.createElement('button');
   nextButton.className = "next";
@@ -88,6 +96,15 @@ function showCalendarMonth() {
       weekElement.appendChild(dayElement);
       dayElement.id = "day";
       dayElement.classList.add("day" + (j+1));
+      if (i != 0) {
+        let dateSpanElement = document.createElement('span');
+        dateSpanElement.className = "dateElement";
+        let dateOnScreen = new Date(firstShownDate.getFullYear(), firstShownDate.getMonth(), firstShownDate.getDate() + datesShown);
+        dateSpanElement.innerHTML = dateOnScreen.getDate();
+        dayElement.appendChild(dateSpanElement);
+        datesShown++;
+        console.log(datesShown - 1);
+      }
       if(i==0) {
         let spanElement = document.createElement('span');
         dayElement.appendChild(spanElement);

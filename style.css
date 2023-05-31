@@ -7,7 +7,7 @@
 :root {
   --main-background: rgb(26, 26, 26);
 }
-@media (max-width: 940px) {
+@media (max-width: 799px) {
   body > * {
     display: none;
   }
@@ -35,7 +35,7 @@
     font-size: 2rem;
   }
 }
-@media (max-height: 570px) and (max-width: 940px) {
+@media (max-height: 570px) and (max-width: 799px) {
   body > * {
     display: none;
   }
@@ -251,6 +251,7 @@ main,
   grid-template-columns: repeat(7, 1fr);
 }
 #day {
+  padding: 5px;
   background-color: rgb(117, 117, 117);
   border-radius: 15px;
 }
@@ -302,4 +303,12 @@ footer > button > span {
   box-sizing: border-box;
   width: 20px;
   height: 20px;
+}
+.dateElement {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: rgb(26, 26, 26);
+  border-radius: 15px;
+  color: white;
 }
