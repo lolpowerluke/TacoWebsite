@@ -234,3 +234,8 @@ function showCalendarDay() {
     dividerLineElement.className = "dividerLine";
   }
 }
+
+function newPlan() {
+  window.location.href = "newplan.html";
+  console.log("good");
+}
