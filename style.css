@@ -161,14 +161,16 @@ main,
 }
 .dayViewTop {
   display: grid;
-  grid-template-columns: 40px 1fr 40px;
+  grid-template-columns: 30px 1fr 60px 30px;
+  gap: 5px;
+  margin: 0 5px;
 }
 .dayViewTop > button {
   all: unset;
   background-color: rgb(117, 117, 117);
   text-align: center;
   border-radius: 10px;
-  margin: 5px;
+  margin: 5px 0;
 }
 #calendar > .dayView > div > span {
   background-color: rgb(117, 117, 117);

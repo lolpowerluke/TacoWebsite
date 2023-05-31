@@ -1,6 +1,5 @@
 let date = new Date();
-let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-let shownDate = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
+let shownDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 let currentMonth = date.getMonth();
 let yearCorrection = 0;
 let monthCorrection = 0;
@@ -22,7 +21,7 @@ async function createAccount(username, password) {
 }
 function load() {
   console.log(currentMonth + 1);
-  showCalendarWeek();
+  showCalendarMonth();
 }
 function correctMonth(correctionType) {
   if(correctionType == "next") {
@@ -52,8 +51,16 @@ function updateDate() {
   shownDate = new Date(shownDate.getFullYear(), shownDate.getMonth() + monthCorrection, shownDate.getDate() + dayCorrection);
 }
 function todayMonth() {
-  shownDate = new Date(firstDay.getFullYear(), firstDay.getMonth(), firstDay.getDate());
+  shownDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   showCalendarMonth();
+}
+function todayWeek() {
+  shownDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  showCalendarWeek();
+}
+function todayDay() {
+  shownDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  showCalendarDay();
 }
 function showCalendarMonth() {
   let firstDayofCurrentlyShownMonth = new Date(shownDate.getFullYear(), shownDate.getMonth(), 1);
@@ -183,8 +190,8 @@ function showCalendarDay() {
   let viewElement = document.createElement('div');
   viewElement.className = "dayView";
   calendar.appendChild(viewElement);
-  let topElement = document.createElement('div');
-  viewElement.appendChild(topElement);
+  let dayTopElement = document.createElement('div');
+  viewElement.appendChild(dayTopElement);
   let dayViewElement = document.createElement('div');
   viewElement.appendChild(dayViewElement);
   dayViewElement.className = "dayViewBottom";
@@ -192,16 +199,21 @@ function showCalendarDay() {
   previousButton.className = "previous";
   previousButton.innerHTML = "<";
   previousButton.setAttribute("onclick", 'correctDay("previous", 1)');
-  topElement.appendChild(previousButton);
+  dayTopElement.appendChild(previousButton);
   let spanElement = document.createElement('span');
-  topElement.appendChild(spanElement);
+  dayTopElement.appendChild(spanElement);
+  spanElement.innerHTML = days[shownDate.getDay()] + " " + shownDate.getDate() + ", " + months[shownDate.getMonth()] + " " + shownDate.getFullYear();
+  let showTodayButton = document.createElement('button');
+  showTodayButton.className = "btnToday";
+  showTodayButton.innerHTML = "Today";
+  showTodayButton.setAttribute("onclick", 'todayWeek()');
+  dayTopElement.appendChild(showTodayButton);
   let nextButton = document.createElement('button');
   nextButton.className = "next";
   nextButton.innerHTML = ">";
   nextButton.setAttribute("onclick", 'correctDay("next", 1)');
-  topElement.appendChild(nextButton);
-  topElement.className = "dayViewTop";
-  spanElement.innerHTML = days[shownDate.getDay()] + " " + shownDate.getDate() + ", " + months[shownDate.getMonth()] + " " + shownDate.getFullYear();
+  dayTopElement.appendChild(nextButton);
+  dayTopElement.className = "dayViewTop";
   for (let i = 0; i < 25; i++) {
     let dividerDivElement = document.createElement('div');
     let dividerLineElement = document.createElement('div');
