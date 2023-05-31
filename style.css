@@ -87,6 +87,10 @@ header > div > button {
   padding: 10px 15px;
   gap: 10px;
   align-items: center;
+  pointer-events: none;
+}
+header:hover > div > button {
+  pointer-events: all;
 }
 header > div > button > span {
   opacity: 0;
@@ -112,7 +116,7 @@ main,
   padding: 10px 10px 10px 20px;
   gap: 10px;
   display: grid;
-  grid-template-rows: 40px repeat(5, 1fr);
+  grid-template-rows: 45px repeat(5, 1fr);
 }
 #calendar > #weekView {
   box-sizing: border-box;
@@ -140,6 +144,14 @@ main,
   text-align: center;
   padding: 10px;
 }
+#weekView .week1 #day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  justify-content: space-between;
+  padding: 10px;
+}
 .dayView {
   display: flex;
   flex-direction: column;
@@ -152,12 +164,50 @@ main,
   display: flex;
   flex-direction: row;
 }
+.divider > span {
+  font-size: 0.7rem;
+}
 .dividerLine {
   height: 1px;
   width: 100%;
   background-color: black;
-  margin-top: 8px;
+  margin-top: 5px;
   margin-left: 5px;
+}
+.week0 #day.previous {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 35px 1fr;
+}
+.week0 #day button{
+  all: unset;
+  background-color: rgb(117, 117, 117);
+  text-align: center;
+  border-radius: 10px;
+  margin: 5px 0;
+  width: 35px;
+  height: calc(100% - 10px);
+}
+.week0 #day.previous span,
+.week0 #day.next span {
+  display: flex;
+  box-sizing: border-box;
+  margin: 2px 20px;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(117, 117, 117);
+  border-radius: 15px;
+  height: 43px;
+}
+.week0 #day.next {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 35px;
 }
 #week {
   gap: 10px;

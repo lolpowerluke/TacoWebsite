@@ -25,7 +25,14 @@ function showCalendarMonth() {
       let dayElement = document.createElement('div');
       weekElement.appendChild(dayElement);
       dayElement.id = "day";
-      dayElement.classList.add("day" + (j+1))
+      dayElement.classList.add("day" + (j+1));
+      if(j == 0 && i == 0) {
+        let previousButton = document.createElement('button');
+        previousButton.className = "previous";
+        previousButton.innerHTML = "<";
+        dayElement.appendChild(previousButton);
+        dayElement.classList.add("previous");
+      }
       if(i==0) {
         let spanElement = document.createElement('span');
         dayElement.appendChild(spanElement);
@@ -52,6 +59,13 @@ function showCalendarMonth() {
             spanElement.innerHTML = "Sunday";
             break;
         }
+      }
+      if (j == 6 && i == 0) {
+        let nextButton = document.createElement('button');
+        nextButton.className = "next";
+        nextButton.innerHTML = ">";
+        dayElement.appendChild(nextButton);
+        dayElement.classList.add("next");
       }
     }
   }
@@ -96,6 +110,19 @@ function showCalendarWeek() {
           case 6:
             spanElement.innerHTML = "Sunday";
             break;
+        }
+      }
+      if(i==1) {
+        for (let i = 0; i < 25; i++) {
+          let dividerDivElement = document.createElement('div');
+          let dividerLineElement = document.createElement('div');
+          dayElement.appendChild(dividerDivElement);
+          dividerDivElement.className = "divider"
+          let timeStampelement = document.createElement('span');
+          dividerDivElement.appendChild(timeStampelement);
+          timeStampelement.innerHTML = i + ":00";
+          dividerDivElement.appendChild(dividerLineElement);
+          dividerLineElement.className = "dividerLine";
         }
       }
     }
