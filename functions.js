@@ -22,7 +22,7 @@ async function createAccount(username, password) {
 }
 function load() {
   console.log(currentMonth + 1);
-  showCalendarMonth();
+  showCalendarWeek();
 }
 function correctMonth(correctionType) {
   if(correctionType == "next") {
@@ -115,27 +115,34 @@ function showCalendarMonth() {
   }
 }
 function showCalendarWeek() {
+  let firstDayofCurrentlyShownWeek = new Date(shownDate.getFullYear(), shownDate.getMonth(), shownDate.getDate() - (shownDate.getDay() - 1));
+  console.log(firstDayofCurrentlyShownWeek);
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
   let viewElement = document.createElement('div');
   viewElement.className = "weekView";
   calendar.appendChild(viewElement);
-  let monthTopElement = document.createElement('div');
-  viewElement.appendChild(monthTopElement);
-  monthTopElement.className = "weekTop";
+  let weekTopElement = document.createElement('div');
+  viewElement.appendChild(weekTopElement);
+  weekTopElement.className = "weekTop";
   let previousButton = document.createElement('button');
   previousButton.className = "previous";
   previousButton.innerHTML = "<";
   previousButton.setAttribute("onclick", 'correctDay("previous", 7)');
-  monthTopElement.appendChild(previousButton);
+  weekTopElement.appendChild(previousButton);
   let monthSpanElement = document.createElement('span');
-  monthTopElement.appendChild(monthSpanElement);
+  weekTopElement.appendChild(monthSpanElement);
   monthSpanElement.innerHTML = months[shownDate.getMonth()] + " " + shownDate.getFullYear();
+  let showTodayButton = document.createElement('button');
+  showTodayButton.className = "btnToday";
+  showTodayButton.innerHTML = "Today";
+  showTodayButton.setAttribute("onclick", 'todayWeek()');
+  weekTopElement.appendChild(showTodayButton);
   let nextButton = document.createElement('button');
   nextButton.className = "next";
   nextButton.innerHTML = ">";
   nextButton.setAttribute("onclick", 'correctDay("next", 7)');
-  monthTopElement.appendChild(nextButton);
+  weekTopElement.appendChild(nextButton);
   for(let i = 0; i < 2; i++) {
     let weekElement = document.createElement('div');
     viewElement.appendChild(weekElement);
@@ -149,7 +156,8 @@ function showCalendarWeek() {
       if(i==0) {
         let spanElement = document.createElement('span');
         dayElement.appendChild(spanElement);
-        spanElement.innerHTML = days[j];
+        let dateOnScreen = new Date(firstDayofCurrentlyShownWeek.getFullYear(), firstDayofCurrentlyShownWeek.getMonth(), firstDayofCurrentlyShownWeek.getDate() + j);
+        spanElement.innerHTML = days[j] + " " + dateOnScreen.getDate();
       }
       if(i==1) {
         for (let i = 0; i < 25; i++) {
