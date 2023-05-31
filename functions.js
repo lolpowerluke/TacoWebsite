@@ -191,15 +191,19 @@ function showCalendarDay() {
   viewElement.className = "dayView";
   calendar.appendChild(viewElement);
   let dayTopElement = document.createElement('div');
+  dayTopElement.className = "dayViewTop";
   viewElement.appendChild(dayTopElement);
-  let dayViewElement = document.createElement('div');
-  viewElement.appendChild(dayViewElement);
-  dayViewElement.className = "dayViewBottom";
   let previousButton = document.createElement('button');
   previousButton.className = "previous";
   previousButton.innerHTML = "<";
   previousButton.setAttribute("onclick", 'correctDay("previous", 1)');
   dayTopElement.appendChild(previousButton);
+  let addEventButton = document.createElement('button');
+  addEventButton.className = "btnToday";
+  addEventButton.innerHTML = "Add Event";
+  addEventButton.setAttribute("onclick", 'todayWeek()');
+  dayTopElement.appendChild(addEventButton);
+  addEventButton.setAttribute("onclick", 'newPlan(' + shownDate.getDate() + ', ' + shownDate.getMonth() + ', ' + shownDate.getFullYear() + ')');
   let spanElement = document.createElement('span');
   dayTopElement.appendChild(spanElement);
   spanElement.innerHTML = days[shownDate.getDay()] + " " + shownDate.getDate() + ", " + months[shownDate.getMonth()] + " " + shownDate.getFullYear();
@@ -213,7 +217,10 @@ function showCalendarDay() {
   nextButton.innerHTML = ">";
   nextButton.setAttribute("onclick", 'correctDay("next", 1)');
   dayTopElement.appendChild(nextButton);
-  dayTopElement.className = "dayViewTop";
+  let dayViewElement = document.createElement('div');
+  viewElement.appendChild(dayViewElement);
+  dayViewElement.className = "dayViewBottom";
+  dayViewElement.setAttribute("onclick", 'newPlan(' + shownDate.getDate() + ', ' + shownDate.getMonth() + ', ' + shownDate.getFullYear() + ')');
   for (let i = 0; i < 25; i++) {
     let dividerDivElement = document.createElement('div');
     let dividerLineElement = document.createElement('div');
