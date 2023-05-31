@@ -153,10 +153,10 @@ function showCalendarWeek() {
       weekElement.appendChild(dayElement);
       dayElement.id = "day";
       dayElement.classList.add("day" + (j+1))
+      let dateOnScreen = new Date(firstDayofCurrentlyShownWeek.getFullYear(), firstDayofCurrentlyShownWeek.getMonth(), firstDayofCurrentlyShownWeek.getDate() + j);
       if(i==0) {
         let spanElement = document.createElement('span');
         dayElement.appendChild(spanElement);
-        let dateOnScreen = new Date(firstDayofCurrentlyShownWeek.getFullYear(), firstDayofCurrentlyShownWeek.getMonth(), firstDayofCurrentlyShownWeek.getDate() + j);
         spanElement.innerHTML = days[j] + " " + dateOnScreen.getDate();
       }
       if(i==1) {
@@ -173,6 +173,7 @@ function showCalendarWeek() {
           dividerLineElement.className = "dividerLine";
         }
       }
+      dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ')');
     }
   }
 }
