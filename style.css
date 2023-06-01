@@ -333,7 +333,7 @@ footer > button > span {
   align-self: center;
   gap: 5px;
   width: 400px;
-  height: 600px;
+  height: 575px;
   background-color: rgb(117, 117, 117);
   border-radius: 15px;
   padding: 15px;
@@ -398,7 +398,15 @@ footer > button > span {
 .closeNewEvent > div:last-of-type {
   transform: rotate(-45deg);
 }
-
+.addEventToDatabase {
+  all: unset;
+  background-color: rgb(26, 26, 26);
+  border-radius: 10px;
+  padding: 3px 5px;
+  text-align: center;
+  margin-top: 10px;
+  color: white;
+}
 input {
   all: unset;
   background-color: rgb(26, 26, 26);
