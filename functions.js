@@ -320,7 +320,6 @@ function newPlan(date, month, year) {
   createEventBtn.className = "addEventToDatabase";
   createEventBtn.setAttribute("onclick", 'addEventToDatabase()');
   addEventContainer.appendChild(createEventBtn);
-  console.log("good");
 }
 function cancelNewPlan() {
   document.getElementById("popupContainer").innerHTML = "";
@@ -332,4 +331,5 @@ function naarProfile() {
 }
 function addEventToDatabase() {
   console.log("waiting for API to respond...");
+  cancelNewPlan();
 }
