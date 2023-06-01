@@ -316,6 +316,11 @@ function newPlan(date, month, year) {
   dateStopInputElement.setAttribute("value", newEventDate.getFullYear() + "-" + newEventDateMonth + "-" + newEventDateDate);
   console.log("good");
 }
+
+function naarProfile() {
+  window.location.href = "profile.html";
+  console.log("naar profile");
+}
 function cancelNewPlan() {
   document.getElementById("popupContainer").innerHTML = "";
   document.getElementById("popupContainer").className = "";
