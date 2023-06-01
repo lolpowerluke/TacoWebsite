@@ -237,5 +237,10 @@ function showCalendarDay() {
 
 function newPlan() {
   window.location.href = "newplan.html";
-  console.log("good");
+  console.log("new plan");
+}
+
+function naarProfile() {
+  window.location.href = "profile.html";
+  console.log("naar profile");
 }
