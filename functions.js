@@ -20,8 +20,8 @@ async function createAccount(username, password) {
   const response = await fetch('http://jurnas.synology.me:7070/tacoapi-TacoAPI.0.3/Account/create?username=' + username + '&password=' + password);
 }
 function load() {
-  console.log(currentMonth + 1);
   showCalendarMonth();
+  newPlan(3, 5, 2023);
 }
 function correctMonth(correctionType) {
   if(correctionType == "next") {
@@ -111,7 +111,6 @@ function showCalendarMonth() {
         dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ')');
         dayElement.appendChild(dateSpanElement);
         datesShown++;
-        console.log(datesShown - 1);
       }
       if(i==0) {
         let spanElement = document.createElement('span');
@@ -123,7 +122,6 @@ function showCalendarMonth() {
 }
 function showCalendarWeek() {
   let firstDayofCurrentlyShownWeek = new Date(shownDate.getFullYear(), shownDate.getMonth(), shownDate.getDate() - (shownDate.getDay() - 1));
-  console.log(firstDayofCurrentlyShownWeek);
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
   let viewElement = document.createElement('div');
@@ -235,7 +233,90 @@ function showCalendarDay() {
   }
 }
 
-function newPlan() {
-  window.location.href = "newplan.html";
+function newPlan(date, month, year) {
+  let popupContainer = document.getElementById("popupContainer");
+  popupContainer.innerHTML = "";
+  popupContainer.className = "addEventPopupShown";
+  let addEventContainer = document.createElement('div');
+  popupContainer.appendChild(addEventContainer);
+  addEventContainer.id = "addEventContainer";
+  let cancelNewPlanBtn = document.createElement('button');
+  addEventContainer.appendChild(cancelNewPlanBtn);
+  cancelNewPlanBtn.className = "closeNewEvent";
+  cancelNewPlanBtn.setAttribute("onclick", 'cancelNewPlan()');
+  for(let i = 0; i < 2; i++) {
+    let divCloseNewPlan = document.createElement('div');
+    cancelNewPlanBtn.appendChild(divCloseNewPlan);
+  }
+  let titleDivElement = document.createElement('div');
+  addEventContainer.appendChild(titleDivElement);
+  titleDivElement.className = "addTitle";
+  let titleSpanElement = document.createElement('span');
+  titleDivElement.appendChild(titleSpanElement);
+  titleSpanElement.innerHTML = "Title";
+  let titleInputElement = document.createElement('input');
+  titleDivElement.appendChild(titleInputElement);
+  titleInputElement.id = "title";
+  titleInputElement.setAttribute("type", "text");
+  let descriptionDivElement = document.createElement('div');
+  addEventContainer.appendChild(descriptionDivElement);
+  descriptionDivElement.className = "addDescription";
+  let descriptionSpanElement = document.createElement('span');
+  descriptionDivElement.appendChild(descriptionSpanElement);
+  descriptionSpanElement.innerHTML = "Description";
+  let descriptionInputElement = document.createElement('textarea');
+  descriptionDivElement.appendChild(descriptionInputElement);
+  descriptionInputElement.id = "description";
+  descriptionInputElement.setAttribute("rows", "16");
+  descriptionInputElement.setAttribute("wrap", "hard");
+  let timeDivElement = document.createElement('div');
+  addEventContainer.appendChild(timeDivElement);
+  timeDivElement.className = "addTimeStamps";
+  let timeStartSpanElement = document.createElement('span');
+  timeDivElement.appendChild(timeStartSpanElement);
+  timeStartSpanElement.innerHTML = "Start time";
+  let timeStartInputElement = document.createElement('input');
+  timeDivElement.appendChild(timeStartInputElement);
+  timeStartInputElement.id = "startTime";
+  timeStartInputElement.setAttribute("type", "time");
+  let timeStopSpanElement = document.createElement('span');
+  timeDivElement.appendChild(timeStopSpanElement);
+  timeStopSpanElement.innerHTML = "End time";
+  let timeStopInputElement = document.createElement('input');
+  timeDivElement.appendChild(timeStopInputElement);
+  timeStopInputElement.id = "endTime";
+  timeStopInputElement.setAttribute("type", "time");
+  let dateDivElement = document.createElement('div');
+  addEventContainer.appendChild(dateDivElement);
+  dateDivElement.className = "addDates";
+  let dateStartSpanElement = document.createElement('span');
+  dateDivElement.appendChild(dateStartSpanElement);
+  dateStartSpanElement.innerHTML = "Start date";
+  let dateStartInputElement = document.createElement('input');
+  dateDivElement.appendChild(dateStartInputElement);
+  dateStartInputElement.id = "startDate";
+  dateStartInputElement.setAttribute("type", "date");
+  let dateStopSpanElement = document.createElement('span');
+  dateDivElement.appendChild(dateStopSpanElement);
+  dateStopSpanElement.innerHTML = "End date";
+  let dateStopInputElement = document.createElement('input');
+  dateDivElement.appendChild(dateStopInputElement);
+  dateStopInputElement.id = "endDate";
+  dateStopInputElement.setAttribute("type", "date");
+  let newEventDate = new Date(year, month, date);
+  let newEventDateMonth = newEventDate.getMonth();
+  if(newEventDateMonth < 10) {
+    newEventDateMonth = "0" + (newEventDateMonth + 1);
+  }
+  let newEventDateDate = newEventDate.getDate();
+  if(newEventDateDate < 10) {
+    newEventDateDate = "0" + newEventDateDate;
+  }
+  dateStartInputElement.setAttribute("value", newEventDate.getFullYear() + "-" + newEventDateMonth + "-" + newEventDateDate);
+  dateStopInputElement.setAttribute("value", newEventDate.getFullYear() + "-" + newEventDateMonth + "-" + newEventDateDate);
   console.log("good");
+}
+function cancelNewPlan() {
+  document.getElementById("popupContainer").innerHTML = "";
+  document.getElementById("popupContainer").className = "";
 }
