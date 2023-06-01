@@ -21,7 +21,6 @@ async function createAccount(username, password) {
 }
 function load() {
   showCalendarMonth();
-  newPlan(3, 5, 2023);
 }
 function correctMonth(correctionType) {
   if(correctionType == "next") {
@@ -303,25 +302,34 @@ function newPlan(date, month, year) {
   dateDivElement.appendChild(dateStopInputElement);
   dateStopInputElement.id = "endDate";
   dateStopInputElement.setAttribute("type", "date");
-  let newEventDate = new Date(year, month, date);
-  let newEventDateMonth = newEventDate.getMonth();
-  if(newEventDateMonth < 10) {
-    newEventDateMonth = "0" + (newEventDateMonth + 1);
+  if(date != undefined && month != undefined && year != undefined) {
+    let newEventDate = new Date(year, month, date);
+    let newEventDateMonth = newEventDate.getMonth();
+    if(newEventDateMonth < 10) {
+      newEventDateMonth = "0" + (newEventDateMonth + 1);
+    }
+    let newEventDateDate = newEventDate.getDate();
+    if(newEventDateDate < 10) {
+      newEventDateDate = "0" + newEventDateDate;
+    }
+    dateStartInputElement.setAttribute("value", newEventDate.getFullYear() + "-" + newEventDateMonth + "-" + newEventDateDate);
+    dateStopInputElement.setAttribute("value", newEventDate.getFullYear() + "-" + newEventDateMonth + "-" + newEventDateDate);
   }
-  let newEventDateDate = newEventDate.getDate();
-  if(newEventDateDate < 10) {
-    newEventDateDate = "0" + newEventDateDate;
-  }
-  dateStartInputElement.setAttribute("value", newEventDate.getFullYear() + "-" + newEventDateMonth + "-" + newEventDateDate);
-  dateStopInputElement.setAttribute("value", newEventDate.getFullYear() + "-" + newEventDateMonth + "-" + newEventDateDate);
+  let createEventBtn = document.createElement('button');
+  createEventBtn.innerHTML = "Create Event";
+  createEventBtn.className = "addEventToDatabase";
+  createEventBtn.setAttribute("onclick", 'addEventToDatabase()');
+  addEventContainer.appendChild(createEventBtn);
   console.log("good");
-}
-
-function naarProfile() {
-  window.location.href = "profile.html";
-  console.log("naar profile");
 }
 function cancelNewPlan() {
   document.getElementById("popupContainer").innerHTML = "";
   document.getElementById("popupContainer").className = "";
+}
+function naarProfile() {
+  window.location.href = "profile.html";
+  console.log("naar profile");
+}
+function addEventToDatabase() {
+  console.log("waiting for API to respond...");
 }
