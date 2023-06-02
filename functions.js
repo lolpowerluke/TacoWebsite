@@ -327,9 +327,11 @@ function cancelNewPlan() {
 }
 function naarProfile() {
   window.location.href = "profile.html";
-  console.log("naar profile");
 }
 function addEventToDatabase() {
   console.log("waiting for API to respond...");
   cancelNewPlan();
+}
+function naarCalendar() {
+  window.location.href = "index.html";
 }

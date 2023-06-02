@@ -319,6 +319,7 @@ footer > button > span {
   width: 0;
   height: 0;
   display: grid;
+  z-index: 99 ;
 }
 #popupContainer.addEventPopupShown {
   width: 100%;
@@ -435,4 +436,35 @@ input {
   border-radius: 4px;
   background-color: rgb(117, 117, 117);
   cursor: move;
+}
+.extraInfo,
+.titleProfilePage {
+  grid-column: 1/3;
+}
+.profileView {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 80px 300px;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.personal-info {
+  display: flex;
+  flex-direction: column;
+}
+.profileView > * {
+  background-color: rgb(117, 117, 117);
+  border-radius: 15px;
+  padding: 20px;
+}
+section .profile-picture {
+  margin: 0;
+}
+.profile-picture img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
 }
