@@ -25,8 +25,6 @@ async function createAccount(username, password) {
 }
 function load() {
   showCalendarMonth();
-  addNewTask(9, 5, 2023);
-  fillNewForm("ok", "lol", "10:00", "11:00");
 }
 function correctMonth(correctionType) {
   if(correctionType == "next") {
