@@ -366,6 +366,7 @@ footer > button > span {
 #addEventContainer > .addTimeStamps > span {
   align-self: end;
 }
+.typeEventChoiceDropDown,
 #addEventContainer input {
   padding: 3px 5px;
   border-radius: 10px;
@@ -399,6 +400,10 @@ footer > button > span {
 .closeNewEvent > div:last-of-type {
   transform: rotate(-45deg);
 }
+.taskList {
+  height: 100%;
+}
+.createNewEvent,
 .addEventToDatabase {
   all: unset;
   background-color: rgb(26, 26, 26);
@@ -408,11 +413,46 @@ footer > button > span {
   margin-top: 10px;
   color: white;
 }
+select,
+option,
 input {
   all: unset;
   background-color: rgb(26, 26, 26);
   appearance: auto;
   color: white;
+}
+select.typeEventChoiceDropDown {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  height: 20px;
+  padding: 5px 5px 2px 5px;
+}
+.select {
+  position: relative;
+}
+.select::after {
+  content: "<>";
+  color: #aaa;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+  right: 8px;
+  top: 2px;
+  padding: 0 0 2px;
+  position: absolute;
+  pointer-events: none;
+}
+.taskElement {
+  padding: 3px 5px;
+  background-color: rgb(26, 26, 26);
+  border-radius: 10px;
+  color: white;
+}
+.closeNewEvent + .select {
+  width: calc(100% - 30px);
 }
 ::-webkit-scrollbar {
   width: 8px;
