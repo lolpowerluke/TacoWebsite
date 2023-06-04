@@ -8,6 +8,7 @@ let titleValue = undefined;
 let descriptionValue = undefined;
 let startTimeValue = undefined;
 let endTimeValue = undefined;
+let timeslotHoursLeft = 0;
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 function signUp() {
@@ -456,6 +457,136 @@ function addEventToDatabase() {
   console.log("waiting for API to respond...");
   cancelNewPlan();
 }
+function addTaskToDatabase() {
+  console.log("waiting for API to respond...");
+  addTimeslot();
+}
+function addTimeslotToDatabase() {
+  console.log("waiting for API to respond...");
+  cancelNewPlan();
+}
+function addTimeslot(neededTimeslots) {
+  if (neededTimeslots == undefined) {
+    let neededTimeslotsRead = document.getElementById("neededTimeslots").value;
+    neededTimeslots = neededTimeslotsRead;
+  } else {
+    neededTimeslots--;
+  }
+  let inputHoursNeeded = document.getElementById("hoursNeeded");
+  if (inputHoursNeeded != null) {
+    timeslotHoursLeft = inputHoursNeeded.value
+  }
+  let inputMinusHoursNeeded = document.getElementById("minusHoursNeeded");
+  if(inputMinusHoursNeeded != null) {
+    timeslotHoursLeft = timeslotHoursLeft - inputMinusHoursNeeded.value;
+  }
+  addTimeslotToDatabase();
+
+  let popupContainer = document.getElementById("popupContainer");
+  popupContainer.innerHTML = "";
+  popupContainer.className = "addEventPopupShown";
+
+  let addEventContainer = document.createElement('div');
+  popupContainer.appendChild(addEventContainer);
+  addEventContainer.id = "addEventContainer";
+
+  let cancelNewPlanBtn = document.createElement('button');
+  addEventContainer.appendChild(cancelNewPlanBtn);
+  cancelNewPlanBtn.className = "closeNewEvent";
+  cancelNewPlanBtn.setAttribute("onclick", 'cancelNewPlan()');
+  for(let i = 0; i < 2; i++) {
+    let divCloseNewPlan = document.createElement('div');
+    cancelNewPlanBtn.appendChild(divCloseNewPlan);
+  }
+
+  let titleDivElement = document.createElement('div');
+  addEventContainer.appendChild(titleDivElement);
+  titleDivElement.className = "addTitle";
+
+  let titleSpanElement = document.createElement('span');
+  titleDivElement.appendChild(titleSpanElement);
+  titleSpanElement.innerHTML = "Title";
+
+  let titleInputElement = document.createElement('input');
+  titleDivElement.appendChild(titleInputElement);
+  titleInputElement.id = "title";
+  titleInputElement.setAttribute("type", "text");
+  titleInputElement.setAttribute("readonly", "");
+
+  let descriptionDivElement = document.createElement('div');
+  addEventContainer.appendChild(descriptionDivElement);
+  descriptionDivElement.className = "addDescription";
+
+  let descriptionSpanElement = document.createElement('span');
+  descriptionDivElement.appendChild(descriptionSpanElement);
+  descriptionSpanElement.innerHTML = "Description";
+
+  let descriptionInputElement = document.createElement('textarea');
+  descriptionDivElement.appendChild(descriptionInputElement);
+  descriptionInputElement.id = "description";
+  descriptionInputElement.setAttribute("rows", "16");
+  descriptionInputElement.setAttribute("wrap", "hard");
+  descriptionInputElement.setAttribute("readonly", "");
+
+  let timeDivElement = document.createElement('div');
+  addEventContainer.appendChild(timeDivElement);
+  timeDivElement.className = "addTimeStamps";
+
+  let timeHoursNeededSpanElement = document.createElement('span');
+  timeDivElement.appendChild(timeHoursNeededSpanElement);
+  timeHoursNeededSpanElement.innerHTML = "Hours needed (" + timeslotHoursLeft + " left)";
+
+  let timeHoursNeededInputElement = document.createElement('input');
+  timeDivElement.appendChild(timeHoursNeededInputElement);
+  timeHoursNeededInputElement.id = "minusHoursNeeded";
+  timeHoursNeededInputElement.setAttribute("type", "number");
+
+  let timeStartSpanElement = document.createElement('span');
+  timeDivElement.appendChild(timeStartSpanElement);
+  timeStartSpanElement.innerHTML = "Start time";
+
+  let timeStartInputElement = document.createElement('input');
+  timeDivElement.appendChild(timeStartInputElement);
+  timeStartInputElement.id = "startTime";
+  timeStartInputElement.setAttribute("type", "time");
+
+  let dateDivElement = document.createElement('div');
+  addEventContainer.appendChild(dateDivElement);
+  dateDivElement.className = "addDates";
+
+  let dateStartSpanElement = document.createElement('span');
+  dateDivElement.appendChild(dateStartSpanElement);
+  dateStartSpanElement.innerHTML = "Start date";
+
+  let dateStartInputElement = document.createElement('input');
+  dateDivElement.appendChild(dateStartInputElement);
+  dateStartInputElement.id = "startDate";
+  dateStartInputElement.setAttribute("type", "date");
+
+  let timeStopSpanElement = document.createElement('span');
+  dateDivElement.appendChild(timeStopSpanElement);
+  timeStopSpanElement.innerHTML = "End time";
+
+  let timeStopInputElement = document.createElement('input');
+  dateDivElement.appendChild(timeStopInputElement);
+  timeStopInputElement.id = "endTime";
+  timeStopInputElement.setAttribute("type", "time");
+
+  if (neededTimeslots != 0) {
+    let createTimslotBtn = document.createElement('button');
+    createTimslotBtn.innerHTML = "Create timeslot (" + (neededTimeslots + 1) + " left)";
+    createTimslotBtn.className = "addTimeslotToDatabase";
+    createTimslotBtn.setAttribute("onclick", 'addTimeslot(' + neededTimeslots + ')');
+    addEventContainer.appendChild(createTimslotBtn);
+  } else {
+    let createTimslotBtn = document.createElement('button');
+    createTimslotBtn.innerHTML = "Create timeslot (" + (neededTimeslots + 1) + " left)";
+    createTimslotBtn.className = "addTimeslotToDatabase";
+    createTimslotBtn.setAttribute("onclick", 'addTimeslotToDatabase()');
+    addEventContainer.appendChild(createTimslotBtn);
+  }
+  fillNewForm(titleValue, descriptionValue, undefined, undefined);
+}
 function naarCalendar() {
   window.location.href = "index.html";
 }
@@ -472,11 +603,19 @@ function updateAddEventContainer(date, month, year) {
   }
   console.log(titleValue,", ", descriptionValue,", ", startTimeValue,", ", endTimeValue);
 }
-function fillNewForm(titleValue, descriptionValue, startTimeValue, endTimeValue) {
-  document.getElementById("title").value = titleValue;
-  document.getElementById("description").value = descriptionValue;
-  document.getElementById("startTime").value = startTimeValue;
-  document.getElementById("endTime").value = endTimeValue;
+function fillNewForm(titleValueA, descriptionValueA, startTimeValueA, endTimeValueA) {
+  if(titleValueA != undefined) {
+    document.getElementById("title").value = titleValueA;
+  }
+  if(descriptionValueA != undefined) {
+    document.getElementById("description").value = descriptionValueA;
+  }
+  if(startTimeValueA != undefined) {
+    document.getElementById("startTime").value = startTimeValueA;
+  }
+  if(endTimeValueA != undefined){
+    document.getElementById("endTime").value = endTimeValueA;
+  }
 }
 function updateAddEventContainerTimeslotView(date, month, year) {
   let eventType = document.getElementById("eventType").value;
@@ -502,6 +641,7 @@ function addNewTask(date, month, year) {
     let divCloseNewPlan = document.createElement('div');
     cancelNewPlanBtn.appendChild(divCloseNewPlan);
   }
+
   let titleDivElement = document.createElement('div');
   addEventContainer.appendChild(titleDivElement);
   titleDivElement.className = "addTitle";
@@ -513,8 +653,8 @@ function addNewTask(date, month, year) {
   let titleInputElement = document.createElement('input');
   titleDivElement.appendChild(titleInputElement);
   titleInputElement.id = "title";
-
   titleInputElement.setAttribute("type", "text");
+
   let descriptionDivElement = document.createElement('div');
   addEventContainer.appendChild(descriptionDivElement);
   descriptionDivElement.className = "addDescription";
@@ -539,16 +679,16 @@ function addNewTask(date, month, year) {
 
   let timeStartInputElement = document.createElement('input');
   timeDivElement.appendChild(timeStartInputElement);
-  timeStartInputElement.id = "startTime";
+  timeStartInputElement.id = "hoursNeeded";
   timeStartInputElement.setAttribute("type", "number");
 
   let timeStopSpanElement = document.createElement('span');
   timeDivElement.appendChild(timeStopSpanElement);
-  timeStopSpanElement.innerHTML = "End time";
+  timeStopSpanElement.innerHTML = "Timeslots needed";
 
   let timeStopInputElement = document.createElement('input');
   timeDivElement.appendChild(timeStopInputElement);
-  timeStopInputElement.id = "endTime";
+  timeStopInputElement.id = "neededTimeslots";
   timeStopInputElement.setAttribute("type", "number");
 
   let dueDateDivElement = document.createElement('div');
@@ -567,7 +707,7 @@ function addNewTask(date, month, year) {
   let createEventBtn = document.createElement('button');
   createEventBtn.innerHTML = "Create Task";
   createEventBtn.className = "addEventToDatabase";
-  createEventBtn.setAttribute("onclick", 'addEventToDatabase()');
+  createEventBtn.setAttribute("onclick", 'addTimeslot()');
   addEventContainer.appendChild(createEventBtn);
-  fillNewForm(titleValue, descriptionValue, startTimeValue, endTimeValue);
+  fillNewForm(titleValue, descriptionValue, undefined, undefined);
 }

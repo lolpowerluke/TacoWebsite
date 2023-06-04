@@ -403,6 +403,7 @@ footer > button > span {
 .taskList {
   height: 100%;
 }
+.addTimeslotToDatabase,
 .createNewEvent,
 .addEventToDatabase {
   all: unset;
