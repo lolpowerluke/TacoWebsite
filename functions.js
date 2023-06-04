@@ -246,28 +246,10 @@ function newPlan(date, month, year, type) {
   popupContainer.appendChild(addEventContainer);
   addEventContainer.id = "addEventContainer";
 
-  let cancelNewPlanBtn = document.createElement('button');
-  addEventContainer.appendChild(cancelNewPlanBtn);
-  cancelNewPlanBtn.className = "closeNewEvent";
-  cancelNewPlanBtn.setAttribute("onclick", 'cancelNewPlan()');
-  for(let i = 0; i < 2; i++) {
-    let divCloseNewPlan = document.createElement('div');
-    cancelNewPlanBtn.appendChild(divCloseNewPlan);
-  }
+  createCancelBtn();
 
   if(type == "Class" || type == "Personal event" || type == undefined) {
-    let titleDivElement = document.createElement('div');
-    addEventContainer.appendChild(titleDivElement);
-    titleDivElement.className = "addTitle";
-
-    let titleSpanElement = document.createElement('span');
-    titleDivElement.appendChild(titleSpanElement);
-    titleSpanElement.innerHTML = "Title";
-
-    let titleInputElement = document.createElement('input');
-    titleDivElement.appendChild(titleInputElement);
-    titleInputElement.id = "title";
-    titleInputElement.setAttribute("type", "text");
+  createTitleElement("");
 
     let eventTypeDivElement = document.createElement("div");
     eventTypeDivElement.className = "select";
@@ -310,19 +292,7 @@ function newPlan(date, month, year, type) {
       }
     }
 
-    let descriptionDivElement = document.createElement('div');
-    addEventContainer.appendChild(descriptionDivElement);
-    descriptionDivElement.className = "addDescription";
-
-    let descriptionSpanElement = document.createElement('span');
-    descriptionDivElement.appendChild(descriptionSpanElement);
-    descriptionSpanElement.innerHTML = "Description";
-
-    let descriptionInputElement = document.createElement('textarea');
-    descriptionDivElement.appendChild(descriptionInputElement);
-    descriptionInputElement.id = "description";
-    descriptionInputElement.setAttribute("rows", "14");
-    descriptionInputElement.setAttribute("wrap", "hard");
+    createDescriptionElement(14);
 
     let timeDivElement = document.createElement('div');
     addEventContainer.appendChild(timeDivElement);
@@ -346,27 +316,27 @@ function newPlan(date, month, year, type) {
     timeStopInputElement.id = "endTime";
     timeStopInputElement.setAttribute("type", "time");
 
-    let dateDivElement = document.createElement('div');
-    addEventContainer.appendChild(dateDivElement);
-    dateDivElement.className = "addDates";
+  let dateDivElement = document.createElement('div');
+  addEventContainer.appendChild(dateDivElement);
+  dateDivElement.className = "addDates";
 
-    let dateStartSpanElement = document.createElement('span');
-    dateDivElement.appendChild(dateStartSpanElement);
-    dateStartSpanElement.innerHTML = "Start date";
+  let dateStartSpanElement = document.createElement('span');
+  dateDivElement.appendChild(dateStartSpanElement);
+  dateStartSpanElement.innerHTML = "Start date";
 
-    let dateStartInputElement = document.createElement('input');
-    dateDivElement.appendChild(dateStartInputElement);
-    dateStartInputElement.id = "startDate";
-    dateStartInputElement.setAttribute("type", "date");
+  let dateStartInputElement = document.createElement('input');
+  dateDivElement.appendChild(dateStartInputElement);
+  dateStartInputElement.id = "startDate";
+  dateStartInputElement.setAttribute("type", "date");
 
-    let dateStopSpanElement = document.createElement('span');
-    dateDivElement.appendChild(dateStopSpanElement);
-    dateStopSpanElement.innerHTML = "End date";
+  let dateStopSpanElement = document.createElement('span');
+  dateDivElement.appendChild(dateStopSpanElement);
+  dateStopSpanElement.innerHTML = "End date";
 
-    let dateStopInputElement = document.createElement('input');
-    dateDivElement.appendChild(dateStopInputElement);
-    dateStopInputElement.id = "endDate";
-    dateStopInputElement.setAttribute("type", "date");
+  let dateStopInputElement = document.createElement('input');
+  dateDivElement.appendChild(dateStopInputElement);
+  dateStopInputElement.id = "endDate";
+  dateStopInputElement.setAttribute("type", "date");
 
     if(date != undefined && month != undefined && year != undefined) {
       let newEventDate = new Date(year, month, date);
@@ -490,43 +460,11 @@ function addTimeslot(neededTimeslots) {
   popupContainer.appendChild(addEventContainer);
   addEventContainer.id = "addEventContainer";
 
-  let cancelNewPlanBtn = document.createElement('button');
-  addEventContainer.appendChild(cancelNewPlanBtn);
-  cancelNewPlanBtn.className = "closeNewEvent";
-  cancelNewPlanBtn.setAttribute("onclick", 'cancelNewPlan()');
-  for(let i = 0; i < 2; i++) {
-    let divCloseNewPlan = document.createElement('div');
-    cancelNewPlanBtn.appendChild(divCloseNewPlan);
-  }
+  createCancelBtn();
 
-  let titleDivElement = document.createElement('div');
-  addEventContainer.appendChild(titleDivElement);
-  titleDivElement.className = "addTitle";
+  createTitleElement("readonly");
 
-  let titleSpanElement = document.createElement('span');
-  titleDivElement.appendChild(titleSpanElement);
-  titleSpanElement.innerHTML = "Title";
-
-  let titleInputElement = document.createElement('input');
-  titleDivElement.appendChild(titleInputElement);
-  titleInputElement.id = "title";
-  titleInputElement.setAttribute("type", "text");
-  titleInputElement.setAttribute("readonly", "");
-
-  let descriptionDivElement = document.createElement('div');
-  addEventContainer.appendChild(descriptionDivElement);
-  descriptionDivElement.className = "addDescription";
-
-  let descriptionSpanElement = document.createElement('span');
-  descriptionDivElement.appendChild(descriptionSpanElement);
-  descriptionSpanElement.innerHTML = "Description";
-
-  let descriptionInputElement = document.createElement('textarea');
-  descriptionDivElement.appendChild(descriptionInputElement);
-  descriptionInputElement.id = "description";
-  descriptionInputElement.setAttribute("rows", "16");
-  descriptionInputElement.setAttribute("wrap", "hard");
-  descriptionInputElement.setAttribute("readonly", "");
+  createDescriptionElement(16, "readonly");
 
   let timeDivElement = document.createElement('div');
   addEventContainer.appendChild(timeDivElement);
@@ -633,41 +571,11 @@ function addNewTask(date, month, year) {
   popupContainer.appendChild(addEventContainer);
   addEventContainer.id = "addEventContainer";
 
-  let cancelNewPlanBtn = document.createElement('button');
-  addEventContainer.appendChild(cancelNewPlanBtn);
-  cancelNewPlanBtn.className = "closeNewEvent";
-  cancelNewPlanBtn.setAttribute("onclick", 'cancelNewPlan()');
-  for(let i = 0; i < 2; i++) {
-    let divCloseNewPlan = document.createElement('div');
-    cancelNewPlanBtn.appendChild(divCloseNewPlan);
-  }
+  createCancelBtn();
 
-  let titleDivElement = document.createElement('div');
-  addEventContainer.appendChild(titleDivElement);
-  titleDivElement.className = "addTitle";
+  createTitleElement("");
 
-  let titleSpanElement = document.createElement('span');
-  titleDivElement.appendChild(titleSpanElement);
-  titleSpanElement.innerHTML = "Title";
-
-  let titleInputElement = document.createElement('input');
-  titleDivElement.appendChild(titleInputElement);
-  titleInputElement.id = "title";
-  titleInputElement.setAttribute("type", "text");
-
-  let descriptionDivElement = document.createElement('div');
-  addEventContainer.appendChild(descriptionDivElement);
-  descriptionDivElement.className = "addDescription";
-
-  let descriptionSpanElement = document.createElement('span');
-  descriptionDivElement.appendChild(descriptionSpanElement);
-  descriptionSpanElement.innerHTML = "Description";
-
-  let descriptionInputElement = document.createElement('textarea');
-  descriptionDivElement.appendChild(descriptionInputElement);
-  descriptionInputElement.id = "description";
-  descriptionInputElement.setAttribute("rows", "16");
-  descriptionInputElement.setAttribute("wrap", "hard");
+  createDescriptionElement(16);
 
   let timeDivElement = document.createElement('div');
   addEventContainer.appendChild(timeDivElement);
@@ -710,4 +618,49 @@ function addNewTask(date, month, year) {
   createEventBtn.setAttribute("onclick", 'addTimeslot()');
   addEventContainer.appendChild(createEventBtn);
   fillNewForm(titleValue, descriptionValue, undefined, undefined);
+}
+function createCancelBtn() {
+  let cancelNewPlanBtn = document.createElement('button');
+  addEventContainer.appendChild(cancelNewPlanBtn);
+  cancelNewPlanBtn.className = "closeNewEvent";
+  cancelNewPlanBtn.setAttribute("onclick", 'cancelNewPlan()');
+  for(let i = 0; i < 2; i++) {
+    let divCloseNewPlan = document.createElement('div');
+    cancelNewPlanBtn.appendChild(divCloseNewPlan);
+  }
+}
+function createTitleElement(readmode) {
+  let titleDivElement = document.createElement('div');
+  addEventContainer.appendChild(titleDivElement);
+  titleDivElement.className = "addTitle";
+
+  let titleSpanElement = document.createElement('span');
+  titleDivElement.appendChild(titleSpanElement);
+  titleSpanElement.innerHTML = "Title";
+
+  let titleInputElement = document.createElement('input');
+  titleDivElement.appendChild(titleInputElement);
+  titleInputElement.id = "title";
+  titleInputElement.setAttribute("type", "text");
+  if (readmode == "readonly") {
+    titleInputElement.setAttribute("readonly", "");
+  }
+}
+function createDescriptionElement(rows, readmode) {
+  let descriptionDivElement = document.createElement('div');
+  addEventContainer.appendChild(descriptionDivElement);
+  descriptionDivElement.className = "addDescription";
+
+  let descriptionSpanElement = document.createElement('span');
+  descriptionDivElement.appendChild(descriptionSpanElement);
+  descriptionSpanElement.innerHTML = "Description";
+
+  let descriptionInputElement = document.createElement('textarea');
+  descriptionDivElement.appendChild(descriptionInputElement);
+  descriptionInputElement.id = "description";
+  descriptionInputElement.setAttribute("rows", rows);
+  descriptionInputElement.setAttribute("wrap", "hard");
+  if (readmode == "readonly") {
+    descriptionInputElement.setAttribute("readonly", "");
+  }
 }
