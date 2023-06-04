@@ -438,7 +438,7 @@ function addTimeslotToDatabase() {
 function addTimeslot(neededTimeslots) {
   if (neededTimeslots == undefined) {
     let neededTimeslotsRead = document.getElementById("neededTimeslots").value;
-    neededTimeslots = neededTimeslotsRead;
+    neededTimeslots = neededTimeslotsRead - 1;
   } else {
     neededTimeslots--;
   }
@@ -512,13 +512,13 @@ function addTimeslot(neededTimeslots) {
 
   if (neededTimeslots != 0) {
     let createTimslotBtn = document.createElement('button');
-    createTimslotBtn.innerHTML = "Create timeslot (" + (neededTimeslots + 1) + " left)";
+    createTimslotBtn.innerHTML = "Create timeslot (" + neededTimeslots + " left)";
     createTimslotBtn.className = "addTimeslotToDatabase";
     createTimslotBtn.setAttribute("onclick", 'addTimeslot(' + neededTimeslots + ')');
     addEventContainer.appendChild(createTimslotBtn);
   } else {
     let createTimslotBtn = document.createElement('button');
-    createTimslotBtn.innerHTML = "Create timeslot (" + (neededTimeslots + 1) + " left)";
+    createTimslotBtn.innerHTML = "Create last timeslot";
     createTimslotBtn.className = "addTimeslotToDatabase";
     createTimslotBtn.setAttribute("onclick", 'addTimeslotToDatabase()');
     addEventContainer.appendChild(createTimslotBtn);
