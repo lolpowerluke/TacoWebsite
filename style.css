@@ -509,3 +509,15 @@ section .profile-picture {
   height: 200px;
   border-radius: 50%;
 }
+.eventDivElement {
+  border-radius: 15px;
+  padding: 5px 10px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: rgb(26, 26, 26);
+  color: white;
+  text-align: start;
+}
+.eventDescriptionElement {
+  color: #aaa;
+}

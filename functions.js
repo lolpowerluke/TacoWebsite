@@ -9,22 +9,76 @@ let descriptionValue = undefined;
 let startTimeValue = undefined;
 let endTimeValue = undefined;
 let timeslotHoursLeft = 0;
+let myEventJson;
+let firstUrlPart = 'http://10.3.50.7:8080/tacoapi-TacoAPI.1.1.0/'
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 function signUp() {
   let username = document.getElementById("email").value;
   let password = document.getElementById("password").value;
+  let firstname = document.getElementById("firstname").value;
+  let lastname = document.getElementById("lastname").value;
   let confirmPassword = document.getElementById("confirm-password").value;
   if(password == confirmPassword) {
-    createAccount(username, password);
+    createAccount(username, password, firstname, lastname);
   } else {
     alert("passwords do not match");
   }
 }
-async function createAccount(username, password) {
-  const response = await fetch('http://jurnas.synology.me:7070/tacoapi-TacoAPI.0.3/Account/create?username=' + username + '&password=' + password);
+async function createAccount(username, password, firstname, lastname) {
+  const response = await fetch(firstUrlPart + 'Account/create?username=' + username + '&password=' + password + '&firstname=' + firstname + '&lastname=' + lastname);
+  const myJson = await response.json();
+  console.log(myJson.error);
 }
 function load() {
+  shownDate = new Date(2023, 4, 5)
+  requestEventsWeek();
+}
+async function requestEventsDay() {
+  let dayDate = shownDate.getDate();
+  if(dayDate < 10) {
+    dayDate = "0" + dayDate;
+  }
+  let dayMonth = shownDate.getMonth() + 1;
+  if(dayMonth < 10) {
+    dayMonth = "0" + dayMonth;
+  }
+  const eventsDay = await fetch(firstUrlPart + 'Appointment/dayView?date=' + shownDate.getFullYear() + '-' + dayMonth + '-' + dayDate);
+  const myJson = await eventsDay.json();
+  console.log(myJson);
+  myEventJson = myJson;
+  showCalendarDay();
+}
+async function requestEventsWeek() {
+  let firstDayOfWeek = new Date(shownDate.getFullYear(), shownDate.getMonth(), (shownDate.getDate() - shownDate.getDay() + 1));
+  let weekDate = firstDayOfWeek.getDate();
+  if(weekDate < 10) {
+    weekDate = "0" + weekDate;
+  }
+  let weekMonth = firstDayOfWeek.getMonth() + 1;
+  if(weekMonth < 10) {
+    weekMonth = "0" + weekMonth;
+  }
+  console.log(firstUrlPart + 'Appointment/weekView?day=' + firstDayOfWeek.getFullYear() + '-' + weekMonth + '-' + weekDate);
+  const eventsWeek = await fetch(firstUrlPart + 'Appointment/weekView?day=' + firstDayOfWeek.getFullYear() + '-' + weekMonth + '-' + weekDate);
+  const myJson = await eventsWeek.json();
+  console.log(myJson);
+  myEventJson = myJson;
+  showCalendarWeek();
+}
+async function requestEventsMonth() {
+  let monthDate = shownDate.getDate();
+  if(monthDate < 10) {
+    monthDate = "0" + monthDate;
+  }
+  let monthMonth = shownDate.getMonth() + 1;
+  if(monthMonth < 10) {
+    monthMonth = "0" + monthMonth;
+  }
+  const eventsMonth = await fetch(firstUrlPart + 'Appointment/monthView?startday=' + shownDate.getFullYear() + '-' + monthMonth + '-' + monthDate);
+  const myJson = await eventsMonth.json();
+  console.log(myJson);
+  myEventJson = myJson;
   showCalendarMonth();
 }
 function correctMonth(correctionType) {
@@ -46,9 +100,9 @@ function correctDay(correctionType, amount) {
   updateDate();
   dayCorrection = 0;
   if(amount == 1) {
-    showCalendarDay();
+    requestEventsDay();
   } else {
-    showCalendarWeek();
+    requestEventsWeek();
   }
 }
 function updateDate() {
@@ -128,40 +182,49 @@ function showCalendarWeek() {
   let firstDayofCurrentlyShownWeek = new Date(shownDate.getFullYear(), shownDate.getMonth(), shownDate.getDate() - (shownDate.getDay() - 1));
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
+
   let viewElement = document.createElement('div');
   viewElement.className = "weekView";
   calendar.appendChild(viewElement);
+
   let weekTopElement = document.createElement('div');
   viewElement.appendChild(weekTopElement);
   weekTopElement.className = "weekTop";
+
   let previousButton = document.createElement('button');
   previousButton.className = "previous";
   previousButton.innerHTML = "<";
   previousButton.setAttribute("onclick", 'correctDay("previous", 7)');
   weekTopElement.appendChild(previousButton);
+
   let monthSpanElement = document.createElement('span');
   weekTopElement.appendChild(monthSpanElement);
   monthSpanElement.innerHTML = months[shownDate.getMonth()] + " " + shownDate.getFullYear();
+
   let showTodayButton = document.createElement('button');
   showTodayButton.className = "btnToday";
   showTodayButton.innerHTML = "Today";
   showTodayButton.setAttribute("onclick", 'todayWeek()');
   weekTopElement.appendChild(showTodayButton);
+
   let nextButton = document.createElement('button');
   nextButton.className = "next";
   nextButton.innerHTML = ">";
   nextButton.setAttribute("onclick", 'correctDay("next", 7)');
   weekTopElement.appendChild(nextButton);
+
   for(let i = 0; i < 2; i++) {
     let weekElement = document.createElement('div');
     viewElement.appendChild(weekElement);
     weekElement.id = "week";
     weekElement.classList.add("week" + i);
+
     for(let j = 0; j < 7; j++) {
       let dayElement = document.createElement('div');
       weekElement.appendChild(dayElement);
       dayElement.id = "day";
       dayElement.classList.add("day" + (j+1))
+
       let dateOnScreen = new Date(firstDayofCurrentlyShownWeek.getFullYear(), firstDayofCurrentlyShownWeek.getMonth(), firstDayofCurrentlyShownWeek.getDate() + j);
       if(i==0) {
         let spanElement = document.createElement('span');
@@ -169,17 +232,44 @@ function showCalendarWeek() {
         spanElement.innerHTML = days[j] + " " + dateOnScreen.getDate();
       }
       if(i==1) {
-        for (let i = 0; i < 25; i++) {
+        for (let k = 0; k < 25; k++) {
           let dividerDivElement = document.createElement('div');
           let dividerLineElement = document.createElement('div');
           dayElement.appendChild(dividerDivElement);
           dividerDivElement.className = "divider";
-          dividerDivElement.id = i + ":00";
+          dividerDivElement.id = k + ":00";
+
           let timeStampelement = document.createElement('span');
           dividerDivElement.appendChild(timeStampelement);
-          timeStampelement.innerHTML = i + ":00";
+          timeStampelement.innerHTML = k + ":00";
           dividerDivElement.appendChild(dividerLineElement);
           dividerLineElement.className = "dividerLine";
+          
+          for(let l = 0; l < myEventJson[j].length; l++) {
+            for(let m = 0; m < myEventJson[j][l].length; m++) {
+              let eventDate = new Date(myEventJson[j][l][m].time);
+              if(k == eventDate.getHours()) {
+                let eventDivElement = document.createElement("div");
+                dayElement.appendChild(eventDivElement);
+                eventDivElement.className = "eventDivElement";
+                eventDivElement.id = myEventJson[j][l][m].type;
+                
+                let eventSpanTitleElement = document.createElement("span");
+                eventDivElement.appendChild(eventSpanTitleElement);
+                eventSpanTitleElement.innerHTML = myEventJson[j][l][m].name;
+                eventSpanTitleElement.className = "eventTitleElement";
+      
+                let eventSpanDashElement = document.createElement("span");
+                eventDivElement.appendChild(eventSpanDashElement);
+                eventSpanDashElement.innerHTML = " - "
+      
+                let eventSpanDescrtiptionElement = document.createElement("span");
+                eventDivElement.appendChild(eventSpanDescrtiptionElement);
+                eventSpanDescrtiptionElement.innerHTML = myEventJson[j][l][m].description;
+                eventSpanDescrtiptionElement.className = "eventDescriptionElement";
+              }
+            }
+          }
         }
       }
       dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ')');
@@ -189,51 +279,87 @@ function showCalendarWeek() {
 function showCalendarDay() {
   const calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
+
   let viewElement = document.createElement('div');
   viewElement.className = "dayView";
   calendar.appendChild(viewElement);
+
   let dayTopElement = document.createElement('div');
   dayTopElement.className = "dayViewTop";
   viewElement.appendChild(dayTopElement);
+
   let previousButton = document.createElement('button');
   previousButton.className = "previous";
   previousButton.innerHTML = "<";
   previousButton.setAttribute("onclick", 'correctDay("previous", 1)');
   dayTopElement.appendChild(previousButton);
+
   let addEventButton = document.createElement('button');
   addEventButton.className = "btnToday";
   addEventButton.innerHTML = "Add Event";
   addEventButton.setAttribute("onclick", 'todayWeek()');
   dayTopElement.appendChild(addEventButton);
   addEventButton.setAttribute("onclick", 'newPlan(' + shownDate.getDate() + ', ' + shownDate.getMonth() + ', ' + shownDate.getFullYear() + ')');
+
   let spanElement = document.createElement('span');
   dayTopElement.appendChild(spanElement);
   spanElement.innerHTML = days[shownDate.getDay()] + " " + shownDate.getDate() + ", " + months[shownDate.getMonth()] + " " + shownDate.getFullYear();
+
   let showTodayButton = document.createElement('button');
   showTodayButton.className = "btnToday";
   showTodayButton.innerHTML = "Today";
   showTodayButton.setAttribute("onclick", 'todayWeek()');
   dayTopElement.appendChild(showTodayButton);
+
   let nextButton = document.createElement('button');
   nextButton.className = "next";
   nextButton.innerHTML = ">";
   nextButton.setAttribute("onclick", 'correctDay("next", 1)');
   dayTopElement.appendChild(nextButton);
+
   let dayViewElement = document.createElement('div');
   viewElement.appendChild(dayViewElement);
   dayViewElement.className = "dayViewBottom";
   dayViewElement.setAttribute("onclick", 'newPlan(' + shownDate.getDate() + ', ' + shownDate.getMonth() + ', ' + shownDate.getFullYear() + ')');
+
   for (let i = 0; i < 25; i++) {
     let dividerDivElement = document.createElement('div');
     let dividerLineElement = document.createElement('div');
     dayViewElement.appendChild(dividerDivElement);
     dividerDivElement.className = "divider";
     dividerDivElement.id = i + ":00";
+
     let timeStampelement = document.createElement('span');
     dividerDivElement.appendChild(timeStampelement);
     timeStampelement.innerHTML = i + ":00";
     dividerDivElement.appendChild(dividerLineElement);
     dividerLineElement.className = "dividerLine";
+    
+    for(let j = 0; j < myEventJson.length; j++) {
+      for(let k = 0; k < myEventJson[j].length; k++) {
+        let eventDate = new Date(myEventJson[j][k].time);
+        if(i == eventDate.getHours()) {
+          let eventDivElement = document.createElement("div");
+          dayViewElement.appendChild(eventDivElement);
+          eventDivElement.className = "eventDivElement";
+          eventDivElement.id = myEventJson[j][k].type;
+          
+          let eventSpanTitleElement = document.createElement("span");
+          eventDivElement.appendChild(eventSpanTitleElement);
+          eventSpanTitleElement.innerHTML = myEventJson[j][k].name;
+          eventSpanTitleElement.className = "eventTitleElement";
+
+          let eventSpanDashElement = document.createElement("span");
+          eventDivElement.appendChild(eventSpanDashElement);
+          eventSpanDashElement.innerHTML = " - "
+
+          let eventSpanDescrtiptionElement = document.createElement("span");
+          eventDivElement.appendChild(eventSpanDescrtiptionElement);
+          eventSpanDescrtiptionElement.innerHTML = myEventJson[j][k].description;
+          eventSpanDescrtiptionElement.className = "eventDescriptionElement";
+        }
+      }
+    }
   }
 }
 
