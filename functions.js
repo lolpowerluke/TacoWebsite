@@ -31,7 +31,6 @@ async function createAccount(username, password, firstname, lastname) {
   console.log(myJson.error);
 }
 function load() {
-  shownDate = new Date(2023, 4, 5)
   requestEventsMonth();
 }
 async function requestEventsDay() {
