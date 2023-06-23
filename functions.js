@@ -32,7 +32,7 @@ async function createAccount(username, password, firstname, lastname) {
 }
 function load() {
   shownDate = new Date(2023, 4, 5)
-  requestEventsWeek();
+  requestEventsMonth();
 }
 async function requestEventsDay() {
   let dayDate = shownDate.getDate();
@@ -75,7 +75,7 @@ async function requestEventsMonth() {
   if(monthMonth < 10) {
     monthMonth = "0" + monthMonth;
   }
-  const eventsMonth = await fetch(firstUrlPart + 'Appointment/monthView?startday=' + shownDate.getFullYear() + '-' + monthMonth + '-' + monthDate);
+  const eventsMonth = await fetch(firstUrlPart + 'Appointment/monthView?startday=' + shownDate.getFullYear() + '-' + monthMonth + '-' + "01");
   const myJson = await eventsMonth.json();
   console.log(myJson);
   myEventJson = myJson;
@@ -127,48 +127,85 @@ function showCalendarMonth() {
   let datesShown = 0;
   let calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
+
   let viewElement = document.createElement('div');
   viewElement.className = "monthView";
   calendar.appendChild(viewElement);
+
   let monthTopElement = document.createElement('div');
   viewElement.appendChild(monthTopElement);
   monthTopElement.className = "monthTop";
+
   let previousButton = document.createElement('button');
   previousButton.className = "previous";
   previousButton.innerHTML = "<";
   previousButton.setAttribute("onclick", 'correctMonth("previous")');
   monthTopElement.appendChild(previousButton);
+
   let monthSpanElement = document.createElement('span');
   monthTopElement.appendChild(monthSpanElement);
   monthSpanElement.innerHTML = months[shownDate.getMonth()] + " " + shownDate.getFullYear();
+
   let showTodayButton = document.createElement('button');
   showTodayButton.className = "btnToday";
   showTodayButton.innerHTML = "Today";
   showTodayButton.setAttribute("onclick", 'todayMonth()');
   monthTopElement.appendChild(showTodayButton);
+
   let nextButton = document.createElement('button');
   nextButton.className = "next";
   nextButton.innerHTML = ">";
   nextButton.setAttribute("onclick", 'correctMonth("next")');
   monthTopElement.appendChild(nextButton);
+
   for(let i = 0; i < 6; i++) {
     let weekElement = document.createElement('div');
     viewElement.appendChild(weekElement);
     weekElement.id = "week";
     weekElement.classList.add("week" + i);
+
     for(let j = 0; j < 7; j++) {
       let dayElement = document.createElement('div');
       weekElement.appendChild(dayElement);
       dayElement.id = "day";
       dayElement.classList.add("day" + (j+1));
+
       if (i != 0) {
         let dateSpanElement = document.createElement('span');
         dateSpanElement.className = "dateElement";
+
         let dateOnScreen = new Date(firstShownDate.getFullYear(), firstShownDate.getMonth(), firstShownDate.getDate() + datesShown);
         dateSpanElement.innerHTML = dateOnScreen.getDate();
         dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ')');
         dayElement.appendChild(dateSpanElement);
         datesShown++;
+        
+        var eventListDivElement = document.createElement("div");
+        dayElement.appendChild(eventListDivElement);
+        eventListDivElement.className = "eventListDivElement";
+
+        for(let k = 0; k < myEventJson.length; k++) {
+          for(let l = 0; l < myEventJson[k].length; l++) {
+            for(let m = 0; m < myEventJson[k][l].length; m++) {
+              let jsonDate = new Date(myEventJson[k][l][m].time);
+              let dateOnScreen = new Date(firstShownDate.getFullYear(), firstShownDate.getMonth(), firstShownDate.getDate() + datesShown);
+              if(jsonDate.getDate() == dateOnScreen.getDate() && jsonDate.getMonth() == dateOnScreen.getMonth() && jsonDate.getFullYear() == dateOnScreen.getFullYear()) {
+                let eventDivElement = document.createElement("div");
+                eventListDivElement.appendChild(eventDivElement);
+                eventDivElement.className = "eventDivElement";
+                eventDivElement.id = myEventJson[k][l][m].type;
+                
+                let eventSpanTitleElement = document.createElement("span");
+                eventDivElement.appendChild(eventSpanTitleElement);
+                eventSpanTitleElement.innerHTML = myEventJson[k][l][m].name;
+                eventSpanTitleElement.className = "eventTitleElement";
+              }
+              if(eventListDivElement.childElementCount > 4) {
+                eventListDivElement.classList.add("eventListDivElementOverflow");
+              }
+            }
+          }
+        }
       }
       if(i==0) {
         let spanElement = document.createElement('span');
