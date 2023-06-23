@@ -28,7 +28,6 @@ function signUp() {
 async function createAccount(username, password, firstname, lastname) {
   const response = await fetch(firstUrlPart + 'Account/create?username=' + username + '&password=' + password + '&firstname=' + firstname + '&lastname=' + lastname);
   const myJson = await response.json();
-  console.log(myJson.error);
 }
 function load() {
   requestEventsMonth();
@@ -44,7 +43,6 @@ async function requestEventsDay() {
   }
   const eventsDay = await fetch(firstUrlPart + 'Appointment/dayView?date=' + shownDate.getFullYear() + '-' + dayMonth + '-' + dayDate);
   const myJson = await eventsDay.json();
-  console.log(myJson);
   myEventJson = myJson;
   showCalendarDay();
 }
@@ -58,10 +56,8 @@ async function requestEventsWeek() {
   if(weekMonth < 10) {
     weekMonth = "0" + weekMonth;
   }
-  console.log(firstUrlPart + 'Appointment/weekView?day=' + firstDayOfWeek.getFullYear() + '-' + weekMonth + '-' + weekDate);
   const eventsWeek = await fetch(firstUrlPart + 'Appointment/weekView?day=' + firstDayOfWeek.getFullYear() + '-' + weekMonth + '-' + weekDate);
   const myJson = await eventsWeek.json();
-  console.log(myJson);
   myEventJson = myJson;
   showCalendarWeek();
 }
@@ -76,7 +72,6 @@ async function requestEventsMonth() {
   }
   const eventsMonth = await fetch(firstUrlPart + 'Appointment/monthView?startday=' + shownDate.getFullYear() + '-' + monthMonth + '-' + "01");
   const myJson = await eventsMonth.json();
-  console.log(myJson);
   myEventJson = myJson;
   showCalendarMonth();
 }
@@ -88,7 +83,7 @@ function correctMonth(correctionType) {
   }
   updateDate();
   monthCorrection = 0;
-  showCalendarMonth();
+  requestEventsMonth();
 }
 function correctDay(correctionType, amount) {
   if(correctionType == "next") {
@@ -696,12 +691,10 @@ function updateAddEventContainer(date, month, year) {
   descriptionValue = document.getElementById("description").value;
   startTimeValue = document.getElementById("startTime").value;
   endTimeValue = document.getElementById("endTime").value;
-  console.log(titleValue,", ", descriptionValue,", ", startTimeValue,", ", endTimeValue);
   newPlan(date, month, year, eventType);
   if(eventType != "Add timeslot to existing task") {
     fillNewForm(titleValue, descriptionValue, startTimeValue, endTimeValue);
   }
-  console.log(titleValue,", ", descriptionValue,", ", startTimeValue,", ", endTimeValue);
 }
 function fillNewForm(titleValueA, descriptionValueA, startTimeValueA, endTimeValueA) {
   if(titleValueA != undefined) {
