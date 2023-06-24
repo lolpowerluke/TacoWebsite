@@ -41,9 +41,13 @@ async function requestEventsDay() {
   if(dayMonth < 10) {
     dayMonth = "0" + dayMonth;
   }
-  const eventsDay = await fetch(firstUrlPart + 'Appointment/dayView?date=' + shownDate.getFullYear() + '-' + dayMonth + '-' + dayDate);
-  const myJson = await eventsDay.json();
-  myEventJson = myJson;
+  try {
+    const eventsDay = await fetch(firstUrlPart + 'Appointment/dayView?date=' + shownDate.getFullYear() + '-' + dayMonth + '-' + dayDate);
+    const myJson = await eventsDay.json();
+    myEventJson = myJson;
+  } catch (error) {
+    console.log(error);
+  }
   showCalendarDay();
 }
 async function requestEventsWeek() {
@@ -56,9 +60,13 @@ async function requestEventsWeek() {
   if(weekMonth < 10) {
     weekMonth = "0" + weekMonth;
   }
+  try {
   const eventsWeek = await fetch(firstUrlPart + 'Appointment/weekView?day=' + firstDayOfWeek.getFullYear() + '-' + weekMonth + '-' + weekDate);
   const myJson = await eventsWeek.json();
   myEventJson = myJson;
+  } catch (error) {
+    console.log(error);
+  }
   showCalendarWeek();
 }
 async function requestEventsMonth() {
@@ -70,9 +78,13 @@ async function requestEventsMonth() {
   if(monthMonth < 10) {
     monthMonth = "0" + monthMonth;
   }
-  const eventsMonth = await fetch(firstUrlPart + 'Appointment/monthView?startday=' + shownDate.getFullYear() + '-' + monthMonth + '-' + "01");
-  const myJson = await eventsMonth.json();
-  myEventJson = myJson;
+  try {
+    const eventsMonth = await fetch(firstUrlPart + 'Appointment/monthView?startday=' + shownDate.getFullYear() + '-' + monthMonth + '-' + "01");
+    const myJson = await eventsMonth.json();
+    myEventJson = myJson;
+  } catch (error) {
+    console.log(error);
+  }
   showCalendarMonth();
 }
 function correctMonth(correctionType) {
@@ -263,10 +275,14 @@ function showCalendarWeek() {
         spanElement.innerHTML = days[j] + " " + dateOnScreen.getDate();
       }
       if(i==1) {
+        let eventListDivElement = document.createElement("div");
+        dayElement.appendChild(eventListDivElement);
+        eventListDivElement.className = "eventListDivElement";
+
         for (let k = 0; k < 25; k++) {
           let dividerDivElement = document.createElement('div');
           let dividerLineElement = document.createElement('div');
-          dayElement.appendChild(dividerDivElement);
+          eventListDivElement.appendChild(dividerDivElement);
           dividerDivElement.className = "divider";
           dividerDivElement.id = k + ":00";
 
@@ -276,28 +292,24 @@ function showCalendarWeek() {
           dividerDivElement.appendChild(dividerLineElement);
           dividerLineElement.className = "dividerLine";
           
-          for(let l = 0; l < myEventJson[j].length; l++) {
-            for(let m = 0; m < myEventJson[j][l].length; m++) {
-              let eventDate = new Date(myEventJson[j][l][m].time);
-              if(k == eventDate.getHours()) {
-                let eventDivElement = document.createElement("div");
-                dayElement.appendChild(eventDivElement);
-                eventDivElement.className = "eventDivElement";
-                eventDivElement.id = myEventJson[j][l][m].type;
-                
-                let eventSpanTitleElement = document.createElement("span");
-                eventDivElement.appendChild(eventSpanTitleElement);
-                eventSpanTitleElement.innerHTML = myEventJson[j][l][m].name;
-                eventSpanTitleElement.className = "eventTitleElement";
-      
-                let eventSpanDashElement = document.createElement("span");
-                eventDivElement.appendChild(eventSpanDashElement);
-                eventSpanDashElement.innerHTML = " - "
-      
-                let eventSpanDescrtiptionElement = document.createElement("span");
-                eventDivElement.appendChild(eventSpanDescrtiptionElement);
-                eventSpanDescrtiptionElement.innerHTML = myEventJson[j][l][m].description;
-                eventSpanDescrtiptionElement.className = "eventDescriptionElement";
+          for(let n = 0; n < myEventJson.length; n++) {
+            for(let l = 0; l < myEventJson[n].length; l++) {
+              for(let m = 0; m < myEventJson[n][l].length; m++) {
+                let jsonDate = new Date(myEventJson[n][l][m].time);
+                if(jsonDate.getDate() == dateOnScreen.getDate() && jsonDate.getMonth() == dateOnScreen.getMonth() && jsonDate.getFullYear() == dateOnScreen.getFullYear()) {
+                  let eventDate = new Date(myEventJson[n][l][m].time);
+                  if(k == eventDate.getHours()) {
+                    let eventDivElement = document.createElement("div");
+                    eventListDivElement.appendChild(eventDivElement);
+                    eventDivElement.className = "eventDivElement";
+                    eventDivElement.id = myEventJson[n][l][m].type;
+                    
+                    let eventSpanTitleElement = document.createElement("span");
+                    eventDivElement.appendChild(eventSpanTitleElement);
+                    eventSpanTitleElement.innerHTML = myEventJson[n][l][m].name;
+                    eventSpanTitleElement.className = "eventTitleElement";
+                  }
+                }
               }
             }
           }
