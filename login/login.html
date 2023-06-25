@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <link href="login.css" rel="stylesheet">
   <title>Login | Taco</title>
-  <script src="../functions.js"></script>
+  <script src="login.js"></script>
 </head>
-<body>
+<body onload="load()">
   <div class="login-form">
     <img src="licensed-image.png">
     <div>
@@ -16,16 +16,16 @@
       </div>
       <div>
         <span>E-mail</span>
-        <input type="text">
+        <input id="email" type="text">
       </div>
       <div>
         <div>
           <span>Password</span>
           <a href="resetPassword.html">Forgot Password?</a>
         </div>
-        <input type="text">
+        <input id="password" type="text">
       </div>
-      <button>Login</button>
+      <button onclick="login()">Login</button>
     </div>
   </div>
 </body>
