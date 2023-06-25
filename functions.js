@@ -13,24 +13,18 @@ let myEventJson;
 let firstUrlPart = 'http://10.3.50.7:8080/tacoapi-TacoAPI.1.1.0/'
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-function signUp() {
-  let username = document.getElementById("email").value;
-  let password = document.getElementById("password").value;
-  let firstname = document.getElementById("firstname").value;
-  let lastname = document.getElementById("lastname").value;
-  let confirmPassword = document.getElementById("confirm-password").value;
-  if(password == confirmPassword) {
-    createAccount(username, password, firstname, lastname);
-  } else {
-    alert("passwords do not match");
-  }
-}
-async function createAccount(username, password, firstname, lastname) {
-  const response = await fetch(firstUrlPart + 'Account/create?username=' + username + '&password=' + password + '&firstname=' + firstname + '&lastname=' + lastname);
-  const myJson = await response.json();
-}
 function load() {
-  requestEventsMonth();
+  let usrName = localStorage.getItem("username");
+  let usrPass = localStorage.getItem("password");
+  let usrID = localStorage.getItem("id");
+  console.log(usrName);
+  console.log(usrPass);
+  console.log(usrID);
+  if(usrName == "" || usrPass == "" || usrID == "") {
+    window.location.href = "login/login.html";
+  } else {
+    requestEventsMonth();
+  }
 }
 async function requestEventsDay() {
   let dayDate = shownDate.getDate();
@@ -61,9 +55,9 @@ async function requestEventsWeek() {
     weekMonth = "0" + weekMonth;
   }
   try {
-  const eventsWeek = await fetch(firstUrlPart + 'Appointment/weekView?day=' + firstDayOfWeek.getFullYear() + '-' + weekMonth + '-' + weekDate);
-  const myJson = await eventsWeek.json();
-  myEventJson = myJson;
+    const eventsWeek = await fetch(firstUrlPart + 'Appointment/weekView?day=' + firstDayOfWeek.getFullYear() + '-' + weekMonth + '-' + weekDate);
+    const myJson = await eventsWeek.json();
+    myEventJson = myJson;
   } catch (error) {
     console.log(error);
   }
@@ -406,7 +400,7 @@ function showCalendarDay() {
   }
 }
 
-function newPlan(date, month, year, type) {
+async function newPlan(date, month, year, type) {
   let popupContainer = document.getElementById("popupContainer");
   popupContainer.innerHTML = "";
   popupContainer.className = "addEventPopupShown";
@@ -485,27 +479,27 @@ function newPlan(date, month, year, type) {
     timeStopInputElement.id = "endTime";
     timeStopInputElement.setAttribute("type", "time");
 
-  let dateDivElement = document.createElement('div');
-  addEventContainer.appendChild(dateDivElement);
-  dateDivElement.className = "addDates";
+    let dateDivElement = document.createElement('div');
+    addEventContainer.appendChild(dateDivElement);
+    dateDivElement.className = "addDates";
 
-  let dateStartSpanElement = document.createElement('span');
-  dateDivElement.appendChild(dateStartSpanElement);
-  dateStartSpanElement.innerHTML = "Start date";
+    let dateStartSpanElement = document.createElement('span');
+    dateDivElement.appendChild(dateStartSpanElement);
+    dateStartSpanElement.innerHTML = "Start date";
 
-  let dateStartInputElement = document.createElement('input');
-  dateDivElement.appendChild(dateStartInputElement);
-  dateStartInputElement.id = "startDate";
-  dateStartInputElement.setAttribute("type", "date");
+    let dateStartInputElement = document.createElement('input');
+    dateDivElement.appendChild(dateStartInputElement);
+    dateStartInputElement.id = "startDate";
+    dateStartInputElement.setAttribute("type", "date");
 
-  let dateStopSpanElement = document.createElement('span');
-  dateDivElement.appendChild(dateStopSpanElement);
-  dateStopSpanElement.innerHTML = "End date";
+    let dateStopSpanElement = document.createElement('span');
+    dateDivElement.appendChild(dateStopSpanElement);
+    dateStopSpanElement.innerHTML = "End date";
 
-  let dateStopInputElement = document.createElement('input');
-  dateDivElement.appendChild(dateStopInputElement);
-  dateStopInputElement.id = "endDate";
-  dateStopInputElement.setAttribute("type", "date");
+    let dateStopInputElement = document.createElement('input');
+    dateDivElement.appendChild(dateStopInputElement);
+    dateStopInputElement.id = "endDate";
+    dateStopInputElement.setAttribute("type", "date");
 
     if(date != undefined && month != undefined && year != undefined) {
       let newEventDate = new Date(year, month, date);
@@ -570,13 +564,18 @@ function newPlan(date, month, year, type) {
     let taskListDivElement = document.createElement('div');
     taskListDivElement.className = "taskList";
     addEventContainer.appendChild(taskListDivElement);
-    //exampleArray
-    let array = ["1", "10", "100"];
-    for (let i = 0; i < array.length; i++) {
-      let taskDivElement = document.createElement('div');
-      taskListDivElement.appendChild(taskDivElement);
-      taskDivElement.className = "taskElement";
-      taskDivElement.innerHTML = array[i];
+    try {
+      const response = await fetch(firstUrlPart + "Appointment/getAssignments");
+      const json = await response.json();
+      for (let i = 0; i < json[0].length; i++) {
+        let taskDivElement = document.createElement('div');
+        taskListDivElement.appendChild(taskDivElement);
+        taskDivElement.className = "taskElement";
+        taskDivElement.innerHTML = json[0][i].name;
+        taskDivElement.setAttribute('onclick', 'addTimeslot( ' + '1, "' + json[0][i].name + '")');
+      }
+    } catch (error) {
+      console.log('Error:', error);
     }
     let createNewTaskBtn = document.createElement('button');
     createNewTaskBtn.className = "createNewEvent";
@@ -596,15 +595,40 @@ function addEventToDatabase() {
   console.log("waiting for API to respond...");
   cancelNewPlan();
 }
-function addTaskToDatabase() {
-  console.log("waiting for API to respond...");
-  addTimeslot();
+async function addTaskToDatabase() {
+  let eventName = document.getElementById("title").value;
+  let eventDescription = document.getElementById("description").value;
+  let eventTime = document.getElementById("hoursNeeded").value;
+  let duedate = new Date(document.getElementById("dueDate").value);
+  let duedateYear = duedate.getFullYear();
+  let duedateMonth = duedate.getMonth();
+  if(duedateMonth < 10) {
+    duedateMonth = "0" + (duedateMonth + 1);
+  }
+  let duedateDate = duedate.getDate();
+  if(duedateDate < 10) {
+    duedateDate = "0" + duedateDate;
+  }
+  const createEvent = await fetch(firstUrlPart + "Appointment/createAssignment?time=" + eventTime + "&due=" + duedateYear + "-" + duedateMonth + "-" + duedateDate + "&name=" + eventName + "&desc=" + eventDescription);
+  let eventJson = await createEvent.json();
+  returnedEventName = eventJson.name;
+  addTimeslot(undefined, returnedEventName);
 }
-function addTimeslotToDatabase() {
-  console.log("waiting for API to respond...");
+async function addTimeslotToDatabase() {
+  let time = document.getElementById("startTime").value;
+  const createEvent = await fetch(firstUrlPart + 'Create/AssignmentTimeslot?time =' + time + '&id=' + userID + '&assignmentID=' + assignmentID);
+  let eventJson = await createEvent.json();
   cancelNewPlan();
 }
-function addTimeslot(neededTimeslots) {
+async function addTimeslot(neededTimeslots, eventName) {
+  try {
+    const responseAssignment = await fetch(firstUrlPart + "Appointment/getAssignment?name=" + eventName);
+    var myJson = await responseAssignment.json();
+    const responseAvailableTimeslots = await fetch(firstUrlPart + "Appointment/AssignmentPlan?duedate=" + myJson[0].duedate);
+    var jsonAvailableTimeslots = await responseAvailableTimeslots.json();
+  } catch (error) {
+    console.log('Error:', error);
+  }
   if (neededTimeslots == undefined) {
     let neededTimeslotsRead = document.getElementById("neededTimeslots").value;
     neededTimeslots = neededTimeslotsRead - 1;
@@ -619,7 +643,9 @@ function addTimeslot(neededTimeslots) {
   if(inputMinusHoursNeeded != null) {
     timeslotHoursLeft = timeslotHoursLeft - inputMinusHoursNeeded.value;
   }
-  addTimeslotToDatabase();
+  if(eventName == undefined) {
+    addTimeslotToDatabase();
+  }
 
   let popupContainer = document.getElementById("popupContainer");
   popupContainer.innerHTML = "";
@@ -652,10 +678,19 @@ function addTimeslot(neededTimeslots) {
   timeDivElement.appendChild(timeStartSpanElement);
   timeStartSpanElement.innerHTML = "Start time";
 
-  let timeStartInputElement = document.createElement('input');
+  let timeStartInputElement = document.createElement('select');
   timeDivElement.appendChild(timeStartInputElement);
   timeStartInputElement.id = "startTime";
-  timeStartInputElement.setAttribute("type", "time");
+  try {
+    for (let i = 0; i < jsonAvailableTimeslots.length; i++) {
+      let timeStartOptionElement = document.createElement('option');
+      timeStartInputElement.appendChild(timeStartOptionElement);
+      timeStartOptionElement.value = jsonAvailableTimeslots[i];
+      timeStartOptionElement.innerHTML = jsonAvailableTimeslots[i];
+    }
+  } catch (error) {
+    console.log('Error:', error);
+  }
 
   let dateDivElement = document.createElement('div');
   addEventContainer.appendChild(dateDivElement);
@@ -678,6 +713,7 @@ function addTimeslot(neededTimeslots) {
   dateDivElement.appendChild(timeStopInputElement);
   timeStopInputElement.id = "endTime";
   timeStopInputElement.setAttribute("type", "time");
+  timeStopInputElement.setAttribute("readonly", "readonly");
 
   if (neededTimeslots != 0) {
     let createTimslotBtn = document.createElement('button');
@@ -692,7 +728,12 @@ function addTimeslot(neededTimeslots) {
     createTimslotBtn.setAttribute("onclick", 'addTimeslotToDatabase()');
     addEventContainer.appendChild(createTimslotBtn);
   }
-  fillNewForm(titleValue, descriptionValue, undefined, undefined);
+  try {
+    fillNewForm(myJson[0].name, myJson[0].description, undefined, undefined);
+  } catch (error) {
+    console.log('Error:', error);
+    fillNewForm(titleValue, descriptionValue, undefined, undefined);
+  }
 }
 function naarCalendar() {
   window.location.href = "index.html";
@@ -765,6 +806,7 @@ function addNewTask(date, month, year) {
   timeDivElement.appendChild(timeStopInputElement);
   timeStopInputElement.id = "neededTimeslots";
   timeStopInputElement.setAttribute("type", "number");
+  timeStopInputElement.setAttribute("min", 0);
 
   let dueDateDivElement = document.createElement('div');
   addEventContainer.appendChild(dueDateDivElement);
@@ -782,7 +824,7 @@ function addNewTask(date, month, year) {
   let createEventBtn = document.createElement('button');
   createEventBtn.innerHTML = "Create Task";
   createEventBtn.className = "addEventToDatabase";
-  createEventBtn.setAttribute("onclick", 'addTimeslot()');
+  createEventBtn.setAttribute("onclick", 'addTaskToDatabase()');
   addEventContainer.appendChild(createEventBtn);
   fillNewForm(titleValue, descriptionValue, undefined, undefined);
 }
