@@ -95,6 +95,7 @@ header:hover > div > button {
 header > div > button > span {
   opacity: 0;
   transition: opacity 0s;
+  width: 140px;
   color: white;
 }
 header:hover > div > button > span {
@@ -558,4 +559,19 @@ section .profile-picture {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.fullTaskList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 5px 10px;
+  box-sizing: border-box;
+}
+.fullTaskList .task {
+  border-radius: 10px;
+  background-color: rgb(117, 117, 117);
+  padding: 5px 10px;
 }

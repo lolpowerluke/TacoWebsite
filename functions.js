@@ -17,10 +17,10 @@ function load() {
   let usrName = localStorage.getItem("username");
   let usrPass = localStorage.getItem("password");
   let usrID = localStorage.getItem("id");
-  if(usrName == "" || usrPass == "" || usrID == "") {
+  if(usrName == null || usrPass == null || usrID == null) {
     window.location.href = "login/login.html";
   } else {
-    requestEventsMonth();
+    requestTaskList();
   }
 }
 async function requestEventsDay() {
@@ -875,5 +875,48 @@ function createDescriptionElement(rows, readmode) {
   descriptionInputElement.setAttribute("wrap", "hard");
   if (readmode == "readonly") {
     descriptionInputElement.setAttribute("readonly", "");
+  }
+}
+function logout() {
+  localStorage.clear();
+  window.location.href = "login/login.html";
+}
+async function requestTaskList() {
+  const response = await fetch(firstUrlPart + "Appointment/getAssignments");
+  const json = await response.json();
+  console.log(json);
+
+  let calendar = document.getElementById("calendar");
+  calendar.innerHTML = "";
+
+  let taskListDivElement = document.createElement('div');
+  calendar.appendChild(taskListDivElement);
+  taskListDivElement.className = "fullTaskList";
+
+  for (let i = 0; i < json[0].length; i++) {
+    let taskDivElement = document.createElement('div');
+    taskListDivElement.appendChild(taskDivElement);
+    taskDivElement.className = "task";
+    taskDivElement.setAttribute("onclick", 'addTimeslot(1, "' + json[0][i].name + '")');
+
+    let taskTitleSpanElement = document.createElement('span');
+    taskDivElement.appendChild(taskTitleSpanElement);
+    taskTitleSpanElement.innerHTML = json[0][i].name;
+
+    let taskDashSpanElement = document.createElement('span');
+    taskDivElement.appendChild(taskDashSpanElement);
+    taskDashSpanElement.innerHTML = " - ";
+
+    let taskDescriptionSpanElement = document.createElement('span');
+    taskDivElement.appendChild(taskDescriptionSpanElement);
+    taskDescriptionSpanElement.innerHTML = json[0][i].description;
+
+    let taskDueDateDashSpanElement = document.createElement('span');
+    taskDivElement.appendChild(taskDueDateDashSpanElement);
+    taskDueDateDashSpanElement.innerHTML = " - ";
+
+    let taskDueDateSpanElement = document.createElement('span');
+    taskDivElement.appendChild(taskDueDateSpanElement);
+    taskDueDateSpanElement.innerHTML = json[0][i].duedate;
   }
 }

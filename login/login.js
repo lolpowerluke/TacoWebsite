@@ -14,13 +14,17 @@ function signUp() {
 function load() {
   let username = localStorage.getItem("username");
   let password = localStorage.getItem("password");
-  if(username != "" && password != "") {
+  if(username != null && password != null) {
     authenticate(username, password);
   }
 }
 async function createAccount(username, password, firstname, lastname) {
   const response = await fetch(firstUrlPart + 'Account/create?username=' + username + '&password=' + password + '&firstname=' + firstname + '&lastname=' + lastname);
   const myJson = await response.json();
+  console.log(myJson);
+  if(myJson.success == true) {
+    authenticate(username, password);
+  }
 }
 function login() {
   let username = document.getElementById("email").value;
@@ -31,11 +35,9 @@ async function authenticate(username, password) {
   const response = await fetch(firstUrlPart + 'Account/check?username=' + username + '&password=' + password);
   const myJson = await response.json();
   if(myJson.success == true) {
-    let today = new Date();
     localStorage.setItem("username", username);
     localStorage.setItem("password", password);
     localStorage.setItem("id", myJson.id);
-
     window.location.href = "../index.html";
   } else {
     alert("incorrect username or password");
