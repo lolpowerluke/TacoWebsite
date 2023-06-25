@@ -30,7 +30,6 @@ function login() {
 async function authenticate(username, password) {
   const response = await fetch(firstUrlPart + 'Account/check?username=' + username + '&password=' + password);
   const myJson = await response.json();
-  console.log(myJson);
   if(myJson.success == true) {
     let today = new Date();
     localStorage.setItem("username", username);

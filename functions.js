@@ -17,9 +17,6 @@ function load() {
   let usrName = localStorage.getItem("username");
   let usrPass = localStorage.getItem("password");
   let usrID = localStorage.getItem("id");
-  console.log(usrName);
-  console.log(usrPass);
-  console.log(usrID);
   if(usrName == "" || usrPass == "" || usrID == "") {
     window.location.href = "login/login.html";
   } else {
@@ -614,10 +611,17 @@ async function addTaskToDatabase() {
   returnedEventName = eventJson.name;
   addTimeslot(undefined, returnedEventName);
 }
-async function addTimeslotToDatabase() {
-  let time = document.getElementById("startTime").value;
-  const createEvent = await fetch(firstUrlPart + 'Create/AssignmentTimeslot?time =' + time + '&id=' + userID + '&assignmentID=' + assignmentID);
-  let eventJson = await createEvent.json();
+async function addTimeslotToDatabase(eventName) {
+  if(eventName != undefined) {
+    const responseAssignment = await fetch(firstUrlPart + "Appointment/getAssignment?name=" + eventName);
+    var myJson = await responseAssignment.json();
+    let time = document.getElementById("startTime").value;
+    userID = localStorage.getItem("id");
+    assignmentID = myJson[0].id;
+    const createEvent = await fetch(firstUrlPart + 'Create/AssignmentTimeslot?time=' + time + '&id=' + userID + '&assignmentID=' + assignmentID);
+  } else {
+    alert("Something went wrong, please try again later");
+  }
   cancelNewPlan();
 }
 async function addTimeslot(neededTimeslots, eventName) {
@@ -644,7 +648,7 @@ async function addTimeslot(neededTimeslots, eventName) {
     timeslotHoursLeft = timeslotHoursLeft - inputMinusHoursNeeded.value;
   }
   if(eventName == undefined) {
-    addTimeslotToDatabase();
+    addTimeslotToDatabase(eventName);
   }
 
   let popupContainer = document.getElementById("popupContainer");
@@ -725,7 +729,7 @@ async function addTimeslot(neededTimeslots, eventName) {
     let createTimslotBtn = document.createElement('button');
     createTimslotBtn.innerHTML = "Create last timeslot";
     createTimslotBtn.className = "addTimeslotToDatabase";
-    createTimslotBtn.setAttribute("onclick", 'addTimeslotToDatabase()');
+    createTimslotBtn.setAttribute("onclick", 'addTimeslotToDatabase( "' + eventName + '")');
     addEventContainer.appendChild(createTimslotBtn);
   }
   try {
