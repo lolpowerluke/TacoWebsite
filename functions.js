@@ -20,7 +20,7 @@ function load() {
   if(usrName == null || usrPass == null || usrID == null) {
     window.location.href = "login/login.html";
   } else {
-    requestTaskList();
+    requestEventsMonth();
   }
 }
 async function requestEventsDay() {
@@ -185,12 +185,12 @@ function showCalendarMonth() {
           for(let l = 0; l < myEventJson[k].length; l++) {
             for(let m = 0; m < myEventJson[k][l].length; m++) {
               let jsonDate = new Date(myEventJson[k][l][m].time);
-              let dateOnScreen = new Date(firstShownDate.getFullYear(), firstShownDate.getMonth(), firstShownDate.getDate() + datesShown);
               if(jsonDate.getDate() == dateOnScreen.getDate() && jsonDate.getMonth() == dateOnScreen.getMonth() && jsonDate.getFullYear() == dateOnScreen.getFullYear()) {
                 let eventDivElement = document.createElement("div");
                 eventListDivElement.appendChild(eventDivElement);
                 eventDivElement.className = "eventDivElement";
                 eventDivElement.id = myEventJson[k][l][m].type;
+                eventDivElement.setAttribute("onclick", 'showOverview("' + myEventJson[k][l][m].name + '")');
                 
                 let eventSpanTitleElement = document.createElement("span");
                 eventDivElement.appendChild(eventSpanTitleElement);
@@ -199,6 +199,9 @@ function showCalendarMonth() {
               }
               if(eventListDivElement.childElementCount > 4) {
                 eventListDivElement.classList.add("eventListDivElementOverflow");
+              }
+              if(eventListDivElement.childElementCount > 0) {
+                dayElement.removeAttribute("onclick");
               }
             }
           }
@@ -619,6 +622,7 @@ async function addTimeslotToDatabase(eventName) {
     userID = localStorage.getItem("id");
     assignmentID = myJson[0].id;
     const createEvent = await fetch(firstUrlPart + 'Create/AssignmentTimeslot?time=' + time + '&id=' + userID + '&assignmentID=' + assignmentID);
+    const json = await createEvent.json();
   } else {
     alert("Something went wrong, please try again later");
   }
@@ -696,29 +700,6 @@ async function addTimeslot(neededTimeslots, eventName) {
     console.log('Error:', error);
   }
 
-  let dateDivElement = document.createElement('div');
-  addEventContainer.appendChild(dateDivElement);
-  dateDivElement.className = "addDates";
-
-  let dateStartSpanElement = document.createElement('span');
-  dateDivElement.appendChild(dateStartSpanElement);
-  dateStartSpanElement.innerHTML = "Start date";
-
-  let dateStartInputElement = document.createElement('input');
-  dateDivElement.appendChild(dateStartInputElement);
-  dateStartInputElement.id = "startDate";
-  dateStartInputElement.setAttribute("type", "date");
-
-  let timeStopSpanElement = document.createElement('span');
-  dateDivElement.appendChild(timeStopSpanElement);
-  timeStopSpanElement.innerHTML = "End time";
-
-  let timeStopInputElement = document.createElement('input');
-  dateDivElement.appendChild(timeStopInputElement);
-  timeStopInputElement.id = "endTime";
-  timeStopInputElement.setAttribute("type", "time");
-  timeStopInputElement.setAttribute("readonly", "readonly");
-
   if (neededTimeslots != 0) {
     let createTimslotBtn = document.createElement('button');
     createTimslotBtn.innerHTML = "Create timeslot (" + neededTimeslots + " left)";
@@ -761,10 +742,22 @@ function fillNewForm(titleValueA, descriptionValueA, startTimeValueA, endTimeVal
     document.getElementById("description").value = descriptionValueA;
   }
   if(startTimeValueA != undefined) {
-    document.getElementById("startTime").value = startTimeValueA;
+    let startTimeElement = document.getElementById("startTime");
+    let dueDateElement = document.getElementById("dueDate");
+    if(startTimeElement != null) {
+      document.getElementById("startTime").value = startTimeValueA;
+    } else if(dueDateElement != null) {
+      document.getElementById("dueDate").setAttribute("value", startTimeValueA)
+    }
   }
   if(endTimeValueA != undefined){
-    document.getElementById("endTime").value = endTimeValueA;
+    let endTimeElement = document.getElementById("endTime");
+    let hoursNeededElement = document.getElementById("hoursNeeded");
+    if(endTimeElement != null) {
+      document.getElementById("endTime").value = endTimeValueA;
+    } else if(hoursNeededElement != null) {
+      document.getElementById("hoursNeeded").setAttribute("value", endTimeValueA)
+    }
   }
 }
 function updateAddEventContainerTimeslotView(date, month, year) {
@@ -884,7 +877,6 @@ function logout() {
 async function requestTaskList() {
   const response = await fetch(firstUrlPart + "Appointment/getAssignments");
   const json = await response.json();
-  console.log(json);
 
   let calendar = document.getElementById("calendar");
   calendar.innerHTML = "";
@@ -897,7 +889,7 @@ async function requestTaskList() {
     let taskDivElement = document.createElement('div');
     taskListDivElement.appendChild(taskDivElement);
     taskDivElement.className = "task";
-    taskDivElement.setAttribute("onclick", 'addTimeslot(1, "' + json[0][i].name + '")');
+    taskDivElement.setAttribute("onclick", 'showOverview("' + json[0][i].name + '")');
 
     let taskTitleSpanElement = document.createElement('span');
     taskDivElement.appendChild(taskTitleSpanElement);
@@ -919,4 +911,62 @@ async function requestTaskList() {
     taskDivElement.appendChild(taskDueDateSpanElement);
     taskDueDateSpanElement.innerHTML = json[0][i].duedate;
   }
+}
+async function showOverview(taskName) {
+  let popupContainer = document.getElementById("popupContainer");
+  popupContainer.innerHTML = "";
+  popupContainer.className = "addEventPopupShown";
+
+  let addEventContainer = document.createElement('div');
+  popupContainer.appendChild(addEventContainer);
+  addEventContainer.id = "addEventContainer";
+
+  createCancelBtn();
+
+  createTitleElement("readonly");
+
+  createDescriptionElement(14, "readonly");
+
+  let timeDivElement = document.createElement('div');
+  addEventContainer.appendChild(timeDivElement);
+  timeDivElement.className = "showTimeNeeded";
+  timeDivElement.setAttribute("readonly", "");
+
+  let timeNeededSpanElement = document.createElement('span');
+  timeDivElement.appendChild(timeNeededSpanElement);
+  timeNeededSpanElement.innerHTML = "Hours needed";
+  timeNeededSpanElement.setAttribute("readonly", "");
+
+  let timeStartInputElement = document.createElement('input');
+  timeDivElement.appendChild(timeStartInputElement);
+  timeStartInputElement.id = "hoursNeeded";
+  timeStartInputElement.setAttribute("type", "number");
+  timeStartInputElement.setAttribute("readonly", "");
+
+  let dueDateDivElement = document.createElement('div');
+  addEventContainer.appendChild(dueDateDivElement);
+  dueDateDivElement.className = "showDueDate";
+  dueDateDivElement.setAttribute("readonly", "");
+
+  let dueDateSpanElement = document.createElement('span');
+  dueDateDivElement.appendChild(dueDateSpanElement);
+  dueDateSpanElement.innerHTML = "Due date";
+  dueDateSpanElement.setAttribute("readonly", "");
+
+  let dueDateInputElement = document.createElement('input');
+  dueDateDivElement.appendChild(dueDateInputElement);
+  dueDateInputElement.id = "dueDate";
+  dueDateInputElement.setAttribute("type", "date");
+  dueDateInputElement.setAttribute("readonly", "");
+
+  let createEventBtn = document.createElement('button');
+  createEventBtn.innerHTML = "Create new timeslot";
+  createEventBtn.className = "addEventToDatabase";
+  createEventBtn.setAttribute("onclick", 'addTimeslot(1, "' + taskName + '")');
+  addEventContainer.appendChild(createEventBtn);
+
+  const response = await fetch(firstUrlPart + "Appointment/getAssignment?name=" + taskName);
+  const json = await response.json();
+
+  fillNewForm(json[0].name, json[0].description, json[0].duedate, json[0].timeneeded);
 }

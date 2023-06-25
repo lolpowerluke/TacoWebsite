@@ -21,7 +21,6 @@ function load() {
 async function createAccount(username, password, firstname, lastname) {
   const response = await fetch(firstUrlPart + 'Account/create?username=' + username + '&password=' + password + '&firstname=' + firstname + '&lastname=' + lastname);
   const myJson = await response.json();
-  console.log(myJson);
   if(myJson.success == true) {
     authenticate(username, password);
   }
