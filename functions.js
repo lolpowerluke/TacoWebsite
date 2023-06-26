@@ -190,7 +190,7 @@ function showCalendarMonth() {
                 eventListDivElement.appendChild(eventDivElement);
                 eventDivElement.className = "eventDivElement";
                 eventDivElement.id = myEventJson[k][l][m].type;
-                eventDivElement.setAttribute("onclick", 'showOverview("' + myEventJson[k][l][m].name + '")');
+                eventDivElement.setAttribute("onclick", 'showOverview("' + myEventJson[k][l][m].name + '", event)');
                 
                 let eventSpanTitleElement = document.createElement("span");
                 eventDivElement.appendChild(eventSpanTitleElement);
@@ -199,9 +199,6 @@ function showCalendarMonth() {
               }
               if(eventListDivElement.childElementCount > 4) {
                 eventListDivElement.classList.add("eventListDivElementOverflow");
-              }
-              if(eventListDivElement.childElementCount > 0) {
-                dayElement.removeAttribute("onclick");
               }
             }
           }
@@ -295,8 +292,9 @@ function showCalendarWeek() {
                   if(k == eventDate.getHours()) {
                     let eventDivElement = document.createElement("div");
                     eventListDivElement.appendChild(eventDivElement);
-                    eventDivElement.className = "eventDivElement";
+                    eventDivElement.className = "eventDivElement"; 
                     eventDivElement.id = myEventJson[n][l][m].type;
+                    eventDivElement.setAttribute("onclick", 'showOverview("' + myEventJson[n][l][m].name + '", event)');
                     
                     let eventSpanTitleElement = document.createElement("span");
                     eventDivElement.appendChild(eventSpanTitleElement);
@@ -380,6 +378,7 @@ function showCalendarDay() {
           dayViewElement.appendChild(eventDivElement);
           eventDivElement.className = "eventDivElement";
           eventDivElement.id = myEventJson[j][k].type;
+          eventDivElement.setAttribute("onclick", 'showOverview("' + myEventJson[j][k].name + '", event)');
           
           let eventSpanTitleElement = document.createElement("span");
           eventDivElement.appendChild(eventSpanTitleElement);
@@ -889,7 +888,7 @@ async function requestTaskList() {
     let taskDivElement = document.createElement('div');
     taskListDivElement.appendChild(taskDivElement);
     taskDivElement.className = "task";
-    taskDivElement.setAttribute("onclick", 'showOverview("' + json[0][i].name + '")');
+    taskDivElement.setAttribute("onclick", 'showOverview("' + json[0][i].name + '", event)');
 
     let taskTitleSpanElement = document.createElement('span');
     taskDivElement.appendChild(taskTitleSpanElement);
@@ -912,7 +911,8 @@ async function requestTaskList() {
     taskDueDateSpanElement.innerHTML = json[0][i].duedate;
   }
 }
-async function showOverview(taskName) {
+async function showOverview(taskName, event) {
+  event.stopPropagation();
   let popupContainer = document.getElementById("popupContainer");
   popupContainer.innerHTML = "";
   popupContainer.className = "addEventPopupShown";
