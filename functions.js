@@ -173,7 +173,7 @@ function showCalendarMonth() {
 
         let dateOnScreen = new Date(firstShownDate.getFullYear(), firstShownDate.getMonth(), firstShownDate.getDate() + datesShown);
         dateSpanElement.innerHTML = dateOnScreen.getDate();
-        dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ')');
+        dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ', "Add timeslot to existing task")');
         dayElement.appendChild(dateSpanElement);
         datesShown++;
         
@@ -307,7 +307,7 @@ function showCalendarWeek() {
           }
         }
       }
-      dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ')');
+      dayElement.setAttribute("onclick", 'newPlan(' + dateOnScreen.getDate() + ', ' + dateOnScreen.getMonth() + ', ' + dateOnScreen.getFullYear() + ', "Add timeslot to existing task")');
     }
   }
 }
@@ -334,7 +334,7 @@ function showCalendarDay() {
   addEventButton.innerHTML = "Add Event";
   addEventButton.setAttribute("onclick", 'todayWeek()');
   dayTopElement.appendChild(addEventButton);
-  addEventButton.setAttribute("onclick", 'newPlan(' + shownDate.getDate() + ', ' + shownDate.getMonth() + ', ' + shownDate.getFullYear() + ')');
+  addEventButton.setAttribute("onclick", 'newPlan(' + shownDate.getDate() + ', ' + shownDate.getMonth() + ', ' + shownDate.getFullYear() + ', "Add timeslot to existing task")');
 
   let spanElement = document.createElement('span');
   dayTopElement.appendChild(spanElement);
@@ -703,7 +703,7 @@ async function addTimeslot(neededTimeslots, eventName) {
     let createTimslotBtn = document.createElement('button');
     createTimslotBtn.innerHTML = "Create timeslot (" + neededTimeslots + " left)";
     createTimslotBtn.className = "addTimeslotToDatabase";
-    createTimslotBtn.setAttribute("onclick", 'addTimeslot(' + neededTimeslots + ')');
+    createTimslotBtn.setAttribute("onclick", 'addTimeslot(' + neededTimeslots + ', "' + eventName + '")');
     addEventContainer.appendChild(createTimslotBtn);
   } else {
     let createTimslotBtn = document.createElement('button');
